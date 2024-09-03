@@ -1,13 +1,26 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterLink, RouterOutlet} from '@angular/router';
+import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
+import {DomSanitizer} from "@angular/platform-browser";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatButtonModule} from "@angular/material/button";
+import {NgOptimizedImage} from "@angular/common";
+import {NavigationMenuComponent} from "./navigation-menu/navigation-menu.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, NavigationMenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'cultureAppFront';
+
+  constructor(iconRegistry: MatIconRegistry, sanitizer:DomSanitizer) {
+    iconRegistry.addSvgIcon(
+      'chilli',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/chilli.svg'),
+    )
+  }
 }

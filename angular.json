@@ -29,7 +29,23 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/assets",
+              "src/assets/img/chilli",
+              "src/assets/img/chilli/favicon.ico",
+              "src/assets/img/chilli/android-chrome-192x192.png",
+              "src/assets/img/chilli/mstile-310x150.png",
+              "src/assets/img/chilli/favicon-16x16.png",
+              "src/assets/img/chilli/android-chrome-512x512.png",
+              "src/assets/img/chilli/favicon-32x32.png",
+              "src/assets/img/chilli/mstile-310x310.png",
+              "src/assets/img/chilli/apple-touch-icon.png",
+              "src/assets/img/chilli/manifest.json",
+              "src/assets/img/chilli/mstile-70x70.png",
+              "src/assets/img/chilli/browserconfig.xml",
+              "src/assets/img/chilli/mstile-144x144.png",
+              "src/assets/img/chilli/safari-pinned-tab.svg",
+              "src/assets/img/chilli/mstile-150x150.png"
             ],
             "styles": [
               "src/styles.scss"

@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'cultureAppFront' title`, () => {
+  it(`should have the 'cultureappfront' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('cultureAppFront');
+    expect(app.title).toEqual('cultureappfront');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, cultureAppFront');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, cultureappfront');
   });
 });

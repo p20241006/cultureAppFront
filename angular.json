@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "cultureAppFront": {
+    "cultureappfront": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -110,16 +110,12 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "proxyConfig": "proxy.conf.json",
-            "buildTarget": "lemon-mart:build"
-          },
           "configurations": {
             "production": {
-              "buildTarget": "cultureAppFront:build:production"
+              "buildTarget": "cultureappfront:build:production"
             },
             "development": {
-              "buildTarget": "cultureAppFront:build:development"
+              "buildTarget": "cultureappfront:build:development"
             }
           },
           "defaultConfiguration": "development"

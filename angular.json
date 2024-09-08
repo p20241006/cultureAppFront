@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "fake-jwt-sign"
+            ],
             "outputPath": "dist/culture-app-front",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -30,6 +33,7 @@
                 "glob": "**/*",
                 "input": "public"
               },
+
               "src/assets",
               "src/assets/img/chilli",
               "src/assets/img/chilli/favicon.ico",

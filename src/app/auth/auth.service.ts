@@ -33,6 +33,7 @@ export const defaultAuthStatus: IAuthStatus = {
 }
 
 export abstract class AuthService implements IAuthService {
+
   private getAndUpdateUserIfAuthenticated = pipe(
     filter((status: IAuthStatus) => status.isAuthenticated),
     mergeMap(() => this.getCurrentUser()),

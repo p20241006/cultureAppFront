@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
   formGroup!: FormGroup
   states$!: Observable<IUSState[]>
   userError = ''
-  currentUserId!: string
+  currentUserId!: number
   constructor(
     private formBuilder: FormBuilder,
     private uiService: UiService,

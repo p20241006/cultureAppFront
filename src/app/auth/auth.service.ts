@@ -19,7 +19,6 @@ export interface IAuthService {
 export interface IAuthStatus {
   isAuthenticated: boolean
   userRole: Role
-  userId: string
 }
 
 export interface IServerAuthResponse {
@@ -29,7 +28,7 @@ export interface IServerAuthResponse {
 export const defaultAuthStatus: IAuthStatus = {
   isAuthenticated: false,
   userRole: Role.User,
-  userId: '',
+
 }
 
 export abstract class AuthService implements IAuthService {
@@ -88,6 +87,8 @@ export abstract class AuthService implements IAuthService {
         return throwError(() => err)
       },
     })
+
+
 
     return loginResponse$
   }

@@ -11,6 +11,14 @@ import { Role } from './auth.enum'
 import { AuthService, IAuthStatus, IServerAuthResponse } from './auth.service'
 
 interface IJwtToken {
+  fullName: string
+  sub: string
+  iat: number
+  exp: number
+  authorities: string[]
+}
+/*
+interface IJwtToken {
   email: string
   role: string
   picture: string
@@ -18,6 +26,9 @@ interface IJwtToken {
   exp: number
   sub: string
 }
+ */
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -37,18 +48,18 @@ export class CustomAuthService extends AuthService {
   }
 
   protected transformJwtToken(token: IJwtToken): IAuthStatus {
+    alert(!!token.sub+ token.authorities[1])
     return {
-      isAuthenticated: token.email? true : false,
-      userId: token.sub,
-      userRole: $enum(Role).asValueOrDefault(token.role, Role.User),
-      userEmail: token.email,
-      userPicture: token.picture,
+      isAuthenticated: !!token.sub,
+      userRole: token.authorities[1],
+
+
     } as IAuthStatus
   }
 
   protected getCurrentUser(): Observable<User> {
     return this.httpClient
-      .get<IUser>(`${environment.baseUrl}/auth/me`)
+      .get<any>(`${environment.baseUrl}/users/me`)
       .pipe(map(User.Build, catchError(transformError)))
   }
 }

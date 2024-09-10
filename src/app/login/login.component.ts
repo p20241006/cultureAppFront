@@ -10,7 +10,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {AuthService} from "../auth/auth.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {catchError, filter, first, tap} from "rxjs/operators";
 import {combineLatest} from "rxjs";
 import {AuthMode, Role} from "../auth/auth.enum";
@@ -18,6 +18,7 @@ import {EmailValidation, PasswordValidation} from "../common/validations";
 import {UiService} from "../common/ui.service";
 import {environment} from "../../environments/environment";
 import {FieldErrorDirective} from "../user-controls/field-error/field-error.component";
+
 
 @Component({
   selector: 'app-login',
@@ -34,6 +35,7 @@ import {FieldErrorDirective} from "../user-controls/field-error/field-error.comp
     MatExpansionModule,
     MatGridListModule,
     RegisterComponent,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -44,7 +46,7 @@ export class LoginComponent implements OnInit{
   private readonly authService = inject(AuthService)
   private readonly router = inject(Router)
   private readonly route = inject(ActivatedRoute)
-  private readonly uiService = inject(UiService)
+  private readonly uiService = inject(UiService);
 
   loginForm!: FormGroup
   loginError = ''
@@ -71,25 +73,24 @@ export class LoginComponent implements OnInit{
   async login(submittedForm: FormGroup) {
     this.authService
       .login(submittedForm.value.email, submittedForm.value.password)
-      .pipe(catchError((err) => (this.loginError = "Login failed with error: ")))
+      .pipe(catchError((err) => (this.loginError = err)))
 
     combineLatest([this.authService.authStatus$, this.authService.currentUser$])
       .pipe(
-        filter(([authStatus, user]) => authStatus.isAuthenticated && user?._id !== ''),
+        filter(([authStatus, user]) => authStatus.isAuthenticated),
         first(),
         tap(([authStatus, user]) => {
           this.uiService.showToast(
-            `Welcome ${user.fullName}! Role: ${authStatus.userRole}`
+            `Welcome ${user.email}! Role: ${authStatus.userRole}`
           )
           this.router.navigate([
             this.redirectUrl || this.homeRoutePerRole(user.role as Role),
           ])
         })
-
       )
       .subscribe()
-
   }
+
 
   private homeRoutePerRole(role: Role) {
     switch (role) {

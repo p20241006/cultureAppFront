@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit{
     ])
       .pipe(
         filter(([authStatus, user]) =>
-          authStatus.isAuthenticated && user?._id !== ''
+          authStatus.isAuthenticated && user?._id !== 0
         ),
         tap(([authStatus, user]) => {
           this.router.navigate(['/manager'])

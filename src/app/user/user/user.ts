@@ -9,7 +9,7 @@ export interface IName {
 }
 
 export interface IUser {
-  _id: string
+  _id: number
   email: string
   password: string
   dateOfBirth: Date | null | string
@@ -28,7 +28,7 @@ export interface IUser {
 export class User implements IUser {
   constructor(
     // tslint:disable-next-line: variable-name
-    public _id = '',
+    public _id = 0,
     public email = '',
     public password ='',
     public dateOfBirth: Date | null = null,

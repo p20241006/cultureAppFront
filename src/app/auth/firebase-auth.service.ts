@@ -79,7 +79,7 @@ export class FirebaseAuthService extends AuthService {
         first: firebaseUser?.displayName?.split(' ')[0] || 'Firebase',
         last: firebaseUser?.displayName?.split(' ')[1] || 'User',
       },
-      picture: firebaseUser.photoURL,
+      photo: firebaseUser.photoURL,
       email: firebaseUser.email,
       _id: firebaseUser.uid,
       role: Role.None,

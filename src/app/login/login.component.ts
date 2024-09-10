@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit{
   async login(submittedForm: FormGroup) {
     this.authService
       .login(submittedForm.value.email, submittedForm.value.password)
-      .pipe(catchError((err) => (this.loginError = err)))
+      .pipe(catchError((err) => (this.loginError = "Login failed with error: ")))
 
     combineLatest([this.authService.authStatus$, this.authService.currentUser$])
       .pipe(
@@ -85,8 +85,10 @@ export class LoginComponent implements OnInit{
             this.redirectUrl || this.homeRoutePerRole(user.role as Role),
           ])
         })
+
       )
       .subscribe()
+
   }
 
   private homeRoutePerRole(role: Role) {

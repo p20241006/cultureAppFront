@@ -25,24 +25,22 @@ interface IJwtToken {
 export class CustomAuthService extends AuthService {
   private httpClient: HttpClient = inject(HttpClient)
 
-  protected authProvider(
-    email: string,
-    password: string
-  ): Observable<IServerAuthResponse> {
+  protected authProvider( email: string, password: string): Observable<IServerAuthResponse> {
     return this.httpClient.post<IServerAuthResponse>(
-      `${environment.baseUrl}/v1/auth/login`,
+      `${environment.baseUrl}/auth/login`,
       {
         email,
         password,
       }
     )
+
   }
 
   protected transformJwtToken(token: IJwtToken): IAuthStatus {
     return {
-      isAuthenticated: token.email ? true : false,
+      isAuthenticated: token.email? true : false,
       userId: token.sub,
-      userRole: $enum(Role).asValueOrDefault(token.role, Role.None),
+      userRole: $enum(Role).asValueOrDefault(token.role, Role.User),
       userEmail: token.email,
       userPicture: token.picture,
     } as IAuthStatus
@@ -50,7 +48,7 @@ export class CustomAuthService extends AuthService {
 
   protected getCurrentUser(): Observable<User> {
     return this.httpClient
-      .get<IUser>(`${environment.baseUrl}/v1/auth/me`)
+      .get<IUser>(`${environment.baseUrl}/auth/me`)
       .pipe(map(User.Build, catchError(transformError)))
   }
 }

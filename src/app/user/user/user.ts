@@ -4,40 +4,24 @@ import { Role } from '../../auth/auth.enum'
 
 export interface IName {
   first: string
-  middle?: string
+  middle: string
   last: string
-}
-
-export enum PhoneType {
-  None = 'none',
-  Mobile = 'mobile',
-  Home = 'home',
-  Work = 'work',
-}
-
-export interface IPhone {
-  type: PhoneType
-  digits: string
-  id: number
 }
 
 export interface IUser {
   _id: string
   email: string
-  name: IName
-  picture: string
-  role: Role | string
-  userStatus: boolean
+  password: string
   dateOfBirth: Date | null | string
-  level: number
-  address: {
-    line1: string
-    line2?: string
-    city: string
-    state: string
-    zip: string
-  }
-  phones: IPhone[]
+  age: number
+  name: IName
+  phone: string
+  city: string
+  gender: string
+  photo: string
+  accountLocked: boolean
+  accountActive: boolean
+  role?: Role | string
   readonly fullName?: string
 }
 
@@ -46,39 +30,39 @@ export class User implements IUser {
     // tslint:disable-next-line: variable-name
     public _id = '',
     public email = '',
-    public name = { first: '', middle: '', last: '' } as IName,
-    public picture = '',
-    public role = Role.None,
+    public password ='',
     public dateOfBirth: Date | null = null,
-    public userStatus = false,
-    public level = 0,
-    public address = {
-      line1: '',
-      city: '',
-      state: '',
-      zip: '',
-    },
-    public phones: IPhone[] = []
+    public age =  0,
+    public name = { first: '', middle: '', last: '' } as IName,
+    public phone = '',
+    public city= '',
+    public gender= '',
+    public photo = '',
+    public accountLocked = false,
+    public accountActive = true,
+    public role = Role.User,
+
   ) {}
 
   static Build(user: IUser) {
-    if (!user) {
+    /*if (!user) {
       return new User()
-    }
+    }*/
 
     return new User(
       user._id,
       user.email,
+      user.password,
+    typeof user.dateOfBirth === 'string' ? new Date(user.dateOfBirth): user.dateOfBirth,
+      user.age,
       user.name,
-      user.picture,
-      $enum(Role).asValueOrDefault(user.role, Role.None),
-      typeof user.dateOfBirth === 'string'
-        ? new Date(user.dateOfBirth)
-        : user.dateOfBirth,
-      user.userStatus,
-      user.level,
-      user.address,
-      user.phones
+      user.phone,
+      user.city,
+      user.gender,
+      user.photo,
+      user.accountLocked,
+      user.accountActive,
+      $enum(Role).asValueOrDefault(user.role, Role.User),
     )
   }
 
@@ -86,7 +70,6 @@ export class User implements IUser {
     if (!this.name) {
       return ''
     }
-
     if (this.name.middle) {
       return `${this.name.first} ${this.name.middle} ${this.name.last}`
     }

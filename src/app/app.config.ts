@@ -18,6 +18,7 @@ import {environment} from "../environments/environment";
 import {AuthMode} from "./auth/auth.enum";
 import {FirebaseAuthService} from "./auth/firebase-auth.service";
 import {authFactory} from "./auth/auth.factory";
+import {CustomAuthService} from "./auth/auth.custom.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [

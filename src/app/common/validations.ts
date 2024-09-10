@@ -13,7 +13,7 @@ export const USAZipCodeValidation = [
   Validators.required,
   Validators.pattern(/^\d{5}(?:[-\s]\d{4})?$/),
 ]
-export const USAPhoneNumberValidation = [
+export const PEPhoneNumberValidation = [
   Validators.required,
-  Validators.pattern(/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/),
+  Validators.pattern(/^(?:\+?51)?\s?\(?\d{1,2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/),
 ]

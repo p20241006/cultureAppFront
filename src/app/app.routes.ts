@@ -21,11 +21,12 @@ export const routes: Routes = [
   {
     path: 'user',
     loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+    canMatch: [authGuard]
   },
   {
     path: 'events',
-    loadChildren: () =>
-      import('./events/events.module').then((m) => m.EventsModule),
+    loadChildren: () => import('./events/events.module').then((m) => m.EventsModule),
+    canMatch: [authGuard]
   },
 
   { path: '**', component: PageNotFoundComponent },

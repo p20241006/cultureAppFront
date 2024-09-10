@@ -36,7 +36,7 @@ export class UserService implements IUserService{
       return throwError(() => 'User id is not set')
     }
 
-    return this.httpClient.get<IUser>(`${environment.baseUrl}/v2/user/${id}`)
+    return this.httpClient.get<IUser>(`${environment.baseUrl}/user/${id}`)
   }
 
   updateUser(id: string, user: IUser): Observable<IUser> {
@@ -47,7 +47,7 @@ export class UserService implements IUserService{
     // cache user data in case of errors
     this.cache.setItem('draft-user', Object.assign(user, { _id: id }))
     const updateResponse$ = this.httpClient
-      .put<IUser>(`${environment.baseUrl}/v2/user/${id}`, user)
+      .put<IUser>(`${environment.baseUrl}/user/${id}`, user)
       .pipe(map(User.Build), catchError(transformError))
 
     updateResponse$.subscribe({
@@ -72,7 +72,7 @@ export class UserService implements IUserService{
     if (sortColumn) {
       sortColumn = sortDirection === 'desc' ? `-${sortColumn}` : sortColumn
     }
-    return this.httpClient.get<IUsers>(`${environment.baseUrl}/v2/users`, {
+    return this.httpClient.get<IUsers>(`${environment.baseUrl}/users`, {
       params: {
         filter: searchText,
         skip: recordsToSkip.toString(),

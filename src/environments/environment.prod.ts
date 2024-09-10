@@ -2,8 +2,8 @@ import { AuthMode } from '../app/auth/auth.enum'
 
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:3000',
-  authMode: AuthMode.Firebase,
+  baseUrl: 'http://localhost:8088/api/v1',
+  authMode: AuthMode.CustomServer,
 
   firebase: {
     apiKey: "AIzaSyApGpahTBVJbYjmZYp_eKejtp8oZikocWo",

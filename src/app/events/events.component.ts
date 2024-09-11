@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {EventCarouselComponent} from "./event-carousel/event-carousel.component";
 import {RouterOutlet} from "@angular/router";
 import {EventHomeComponent} from "./event-home/event-home.component";
+import {initFlowbite} from "flowbite";
 
 @Component({
   selector: 'app-events',
@@ -12,11 +13,13 @@ import {EventHomeComponent} from "./event-home/event-home.component";
     EventHomeComponent
   ],
   template: `
-    <app-event-home></app-event-home>
     <router-outlet></router-outlet>
   `,
   styles: ``
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit{
+  ngOnInit() {
+    initFlowbite()
+  }
 
 }

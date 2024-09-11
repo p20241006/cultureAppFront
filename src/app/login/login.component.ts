@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit{
         first(),
         tap(([authStatus, user]) => {
           this.uiService.showToast(
-            `Welcome ${user.email}! Role: ${authStatus.userRole}`
+            `Welcome ${authStatus.userId}! Role: ${authStatus.userRole}`
           )
           this.router.navigate([
             this.redirectUrl || this.homeRoutePerRole(user.role as Role),

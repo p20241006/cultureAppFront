@@ -46,7 +46,7 @@ export class InMemoryAuthService extends AuthService {
 
     const authStatus = {
       isAuthenticated: true,
-      userId: this.defaultUser._id,
+      //userId: this.defaultUser._id,
       userRole: email.includes('user')
         ? Role.User
         : email.includes('adminEvents')

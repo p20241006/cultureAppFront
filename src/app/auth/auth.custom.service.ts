@@ -48,11 +48,9 @@ export class CustomAuthService extends AuthService {
   }
 
   protected transformJwtToken(token: IJwtToken): IAuthStatus {
-    alert(!!token.sub+ token.authorities[1])
     return {
       isAuthenticated: !!token.sub,
-      userRole: token.authorities[1],
-
+      userRole: token.authorities[0],
 
     } as IAuthStatus
   }

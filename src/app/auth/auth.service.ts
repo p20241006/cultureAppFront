@@ -18,7 +18,8 @@ export interface IAuthService {
 
 export interface IAuthStatus {
   isAuthenticated: boolean
-  userRole: Role
+  userRole: Role,
+  userId?: string
 }
 
 export interface IServerAuthResponse {

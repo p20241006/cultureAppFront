@@ -20,7 +20,7 @@ interface IJwtToken {
   email: string
   iat: number
   exp: number
-  sub: number
+  sub: string
 }
 
 @Injectable({
@@ -60,7 +60,7 @@ export class FirebaseAuthService extends AuthService {
 
     return {
       isAuthenticated: token.email ? true : false,
-      //userId: token.sub,
+      userId: token.sub,
       userRole: Role.None,
     }
   }

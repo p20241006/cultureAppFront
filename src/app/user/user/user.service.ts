@@ -82,4 +82,10 @@ export class UserService implements IUserService{
     })
   }
 
+  private baseUrl = 'http://localhost:8088/api/v1/auth';
+
+  register(userData: any): Observable<any> {
+    return this.httpClient.post<any>(`http://localhost:8088/api/v1/auth/register`, userData);
+  }
+
 }

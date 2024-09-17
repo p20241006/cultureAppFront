@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-event-recomendation',
@@ -7,6 +8,9 @@ import { Component } from '@angular/core';
   templateUrl: './event-recomendation.component.html',
   styleUrl: './event-recomendation.component.scss'
 })
-export class EventRecomendationComponent {
-
+export class EventRecomendationComponent implements OnInit {
+  ngOnInit(): void {
+    initFlowbite();
+  }
+  
 }

@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {EventCarouselComponent} from "./event-carousel/event-carousel.component";
 import {RouterOutlet} from "@angular/router";
 import {EventHomeComponent} from "./event-home/event-home.component";
 import {initFlowbite} from "flowbite";
@@ -8,7 +7,7 @@ import {initFlowbite} from "flowbite";
   selector: 'app-events',
   standalone: true,
   imports: [
-    EventCarouselComponent,
+    
     RouterOutlet,
     EventHomeComponent
   ],

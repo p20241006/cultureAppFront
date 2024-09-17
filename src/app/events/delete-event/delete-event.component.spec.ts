@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EventCarouselComponent } from './event-carousel.component';
+import { DeleteEventComponent } from './delete-event.component';
 
-describe('EventCarouselComponent', () => {
-  let component: EventCarouselComponent;
-  let fixture: ComponentFixture<EventCarouselComponent>;
+describe('DeleteEventComponent', () => {
+  let component: DeleteEventComponent;
+  let fixture: ComponentFixture<DeleteEventComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventCarouselComponent]
+      imports: [DeleteEventComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EventCarouselComponent);
+    fixture = TestBed.createComponent(DeleteEventComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -26,12 +26,16 @@
     "@angular/router": "^18.2.0",
     "@ngbracket/ngx-layout": "^18.0.0",
     "@ngrx/signals": "^18.0.2",
+    "angular": "^1.8.3",
+    "coreui": "^0.4.2-alpha2",
     "fake-jwt-sign": "^1.1.1",
     "firebase": "^10.13.1",
     "flowbite": "^2.5.1",
     "jwt-decode": "^4.0.0",
     "ng-mocks": "^14.13.1",
     "rxjs": "~7.8.0",
+    "slick-carousel": "^1.8.1",
+    "swiper": "^11.1.14",
     "ts-enum-util": "^4.1.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
@@ -51,7 +55,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.4.44",
-    "tailwindcss": "^3.4.10",
+    "tailwindcss": "^3.4.11",
     "typescript": "~5.5.2"
   }
 }

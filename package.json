@@ -31,6 +31,8 @@
     "flowbite": "^2.5.1",
     "jwt-decode": "^4.0.0",
     "ng-mocks": "^14.13.1",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.10",
     "rxjs": "~7.8.0",
     "ts-enum-util": "^4.1.0",
     "tslib": "^2.3.0",

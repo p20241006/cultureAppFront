@@ -2,7 +2,7 @@ export interface Event_model {
   id: number;               // Identificador único del evento
   title: string;            // Título del evento
   description: string;  //Descripción del evento
-  star_date: string;    //
+  start_date: string;    //
   end_date: string;
   price: number;
   urlEvent: string;         // URL del evento

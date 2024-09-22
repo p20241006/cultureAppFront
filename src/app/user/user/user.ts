@@ -11,10 +11,10 @@ export interface IName {
 export interface IUser {
   _id: number
   email: string
-  password: string
-  dateOfBirth: Date | null | string
+  //password: string
+  //dateOfBirth: Date | null | string
   age: number
-  name: IName
+  fullName: IName
   phone: string
   city: string
   gender: string
@@ -22,7 +22,7 @@ export interface IUser {
   accountLocked: boolean
   accountActive: boolean
   role?: Role | string
-  readonly fullName?: string
+
 }
 
 export class User implements IUser {
@@ -30,10 +30,10 @@ export class User implements IUser {
     // tslint:disable-next-line: variable-name
     public _id = 0,
     public email = '',
-    public password ='',
-    public dateOfBirth: Date | null = null,
+    //public password ='',
+    //public dateOfBirth: Date | null = null,
     public age =  0,
-    public name = { first: '', middle: '', last: '' } as IName,
+    public fullName = { first: '', middle: '', last: '' } as IName,
     public phone = '',
     public city= '',
     public gender= '',
@@ -52,10 +52,10 @@ export class User implements IUser {
     return new User(
       user._id,
       user.email,
-      user.password,
-    typeof user.dateOfBirth === 'string' ? new Date(user.dateOfBirth): user.dateOfBirth,
+      //user.password,
+    //typeof user.dateOfBirth === 'string' ? new Date(user.dateOfBirth): user.dateOfBirth,
       user.age,
-      user.name,
+      user.fullName,
       user.phone,
       user.city,
       user.gender,
@@ -66,14 +66,14 @@ export class User implements IUser {
     )
   }
 
-  public get fullName(): string {
-    if (!this.name) {
+  public get fullNameFunction(): string {
+    if (!this.fullName) {
       return ''
     }
-    if (this.name.middle) {
-      return `${this.name.first} ${this.name.middle} ${this.name.last}`
+    if (this.fullName.middle) {
+      return `${this.fullName.first} ${this.fullName.middle} ${this.fullName.last}`
     }
-    return `${this.name.first} ${this.name.last}`
+    return `${this.fullName.first} ${this.fullName.last}`
   }
 
   toJSON(): object {

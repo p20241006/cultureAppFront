@@ -13,10 +13,10 @@ export class InMemoryAuthService extends AuthService {
 
     _id: 25878,
     email:'wfuturi@gmail.com',
-    password:'12345678',
-    dateOfBirth: new Date(1995, 10, 10),
+    //password:'12345678',
+    //dateOfBirth: new Date(1995, 10, 10),
     age:  30,
-    name: { first: 'Wilfredo', middle: 'Futuri', last: 'Illa' },
+    fullName: { first: 'Wilfredo', middle: 'Futuri', last: 'Illa' },
     phone: '997114593',
     city: 'Lima',
     gender: 'Masculino',

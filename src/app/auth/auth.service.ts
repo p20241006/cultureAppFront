@@ -8,18 +8,10 @@ import { transformError } from '../common/common'
 import { IUser, User } from '../user/user/user'
 import { Role } from './auth.enum'
 
-export interface IAuthService {
-  readonly authStatus$: BehaviorSubject<IAuthStatus>
-  readonly currentUser$: BehaviorSubject<IUser>
-  login(email: string, password: string): Observable<void>
-  logout(clearToken?: boolean): void
-  getToken(): string
-}
-
 export interface IAuthStatus {
   isAuthenticated: boolean
-  userRole: Role,
-  userId?: string
+  userRole: Role
+  userId: string
 }
 
 export interface IServerAuthResponse {
@@ -28,12 +20,19 @@ export interface IServerAuthResponse {
 
 export const defaultAuthStatus: IAuthStatus = {
   isAuthenticated: false,
-  userRole: Role.User,
+  userRole: Role.None,
+  userId: '',
+}
 
+export interface IAuthService {
+  readonly authStatus$: BehaviorSubject<IAuthStatus>
+  readonly currentUser$: BehaviorSubject<IUser>
+  login(email: string, password: string): Observable<void>
+  logout(clearToken?: boolean): void
+  getToken(): string
 }
 
 export abstract class AuthService implements IAuthService {
-
   private getAndUpdateUserIfAuthenticated = pipe(
     filter((status: IAuthStatus) => status.isAuthenticated),
     mergeMap(() => this.getCurrentUser()),
@@ -49,7 +48,14 @@ export abstract class AuthService implements IAuthService {
     this.getAndUpdateUserIfAuthenticated
   )
 
+  // Example caching technique
+  // readonly authStatus$ = new BehaviorSubject<IAuthStatus>(
+  //   this.getItem('authStatus') ?? defaultAuthStatus
+  // )
+
   constructor() {
+    // this.authStatus$.pipe(tap((authStatus) => this.setItem('authStatus', authStatus))) // example caching technique
+
     if (this.hasExpiredToken()) {
       this.logout(true)
     } else {
@@ -64,9 +70,7 @@ export abstract class AuthService implements IAuthService {
     email: string,
     password: string
   ): Observable<IServerAuthResponse>
-
   protected abstract transformJwtToken(token: unknown): IAuthStatus
-
   protected abstract getCurrentUser(): Observable<User>
 
   login(email: string, password: string): Observable<void> {
@@ -75,11 +79,16 @@ export abstract class AuthService implements IAuthService {
     const loginResponse$ = this.authProvider(email, password).pipe(
       map((value) => {
         this.setToken(value.accessToken)
-        const token = decode(value.accessToken)
-        return this.transformJwtToken(token)
+        // const token = decode(value.accessToken)
+        // return this.transformJwtToken(token)
+        return this.getAuthStatusFromToken() // Keeping the code DRY!
       }),
       tap((status) => this.authStatus$.next(status)),
-      this.getAndUpdateUserIfAuthenticated
+      // filter((status: IAuthStatus) => status.isAuthenticated),
+      // mergeMap(() => this.getCurrentUser()),
+      // map((user: IUser) => this.currentUser$.next(user)),
+      // catchError(transformError)
+      this.getAndUpdateUserIfAuthenticated // Keeping the code DRY!
     )
 
     loginResponse$.subscribe({
@@ -88,8 +97,6 @@ export abstract class AuthService implements IAuthService {
         return throwError(() => err)
       },
     })
-
-
 
     return loginResponse$
   }

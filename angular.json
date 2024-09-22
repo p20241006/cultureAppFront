@@ -120,6 +120,9 @@
             },
             "development": {
               "buildTarget": "cultureappfront:build:development"
+            },
+            "firebase": {
+              "buildTarget": "cultureappfront:build:firebase"
             }
           },
           "defaultConfiguration": "development"

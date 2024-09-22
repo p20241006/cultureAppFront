@@ -75,7 +75,7 @@ export class FirebaseAuthService extends AuthService {
     }
 
     return User.Build({
-      name: {
+      fullName: {
         first: firebaseUser?.displayName?.split(' ')[0] || 'Firebase',
         last: firebaseUser?.displayName?.split(' ')[1] || 'User',
       },

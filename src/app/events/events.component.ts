@@ -3,6 +3,8 @@ import {EventCarouselComponent} from "./event-carousel/event-carousel.component"
 import {RouterOutlet} from "@angular/router";
 import {EventHomeComponent} from "./event-home/event-home.component";
 import {initFlowbite} from "flowbite";
+import {EventCategoryComponent} from "./event-category/event-category.component";
+import {EventService} from "./event.service";
 
 @Component({
   selector: 'app-events',
@@ -10,8 +12,10 @@ import {initFlowbite} from "flowbite";
   imports: [
     EventCarouselComponent,
     RouterOutlet,
-    EventHomeComponent
+    EventHomeComponent,
+    EventCategoryComponent
   ],
+  providers: [EventService],
   template: `
     <router-outlet></router-outlet>
   `,

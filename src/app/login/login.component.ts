@@ -12,12 +12,13 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {AuthService} from "../auth/auth.service";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {catchError, filter, first, tap} from "rxjs/operators";
-import {combineLatest} from "rxjs";
+import {combineLatest, throwError} from "rxjs";
 import {AuthMode, Role} from "../auth/auth.enum";
 import {EmailValidation, PasswordValidation} from "../common/validations";
 import {UiService} from "../common/ui.service";
 import {environment} from "../../environments/environment";
-import {FieldErrorDirective} from "../user-controls/field-error/field-error.component";
+import {FieldErrorDirective} from "../user-controls/field-error.directive";
+
 
 
 @Component({
@@ -70,25 +71,36 @@ export class LoginComponent implements OnInit{
     })
   }
 
-  async login(submittedForm: FormGroup) {
+ async login(submittedForm: FormGroup) {
     this.authService
       .login(submittedForm.value.email, submittedForm.value.password)
-      .pipe(catchError((err) => (this.loginError = err)))
-
-    combineLatest([this.authService.authStatus$, this.authService.currentUser$])
       .pipe(
-        filter(([authStatus, user]) => authStatus.isAuthenticated),
-        first(),
-        tap(([authStatus, user]) => {
-          this.uiService.showToast(
-            `Welcome ${authStatus.userId}! Role: ${authStatus.userRole}`
-          )
-          this.router.navigate([
-            this.redirectUrl || this.homeRoutePerRole(user.role as Role),
-          ])
+        catchError((err) => {
+          this.loginError = err; // Almacena el error en una variable para mostrarlo en la UI
+          return throwError(() => err); // Repropaga el error si es necesario
         })
       )
-      .subscribe()
+      .subscribe({
+        next: () => {
+          combineLatest([this.authService.authStatus$, this.authService.currentUser$])
+            .pipe(
+              filter(([authStatus, user]) => authStatus.isAuthenticated),
+              first(),
+              tap(([authStatus, user]) => {
+                this.uiService.showToast(
+                  `Bienvenido ${user.fullName}! Rol: ${authStatus.userRole}`
+                );
+                this.router.navigate([
+                  this.homeRoutePerRole(user.role as Role),
+                ]);
+              })
+            )
+            .subscribe();
+        },
+        error: (err) => {
+          this.uiService.showToast('Error al iniciar sesión. Por favor, inténtelo de nuevo.');
+        },
+      });
   }
 
 

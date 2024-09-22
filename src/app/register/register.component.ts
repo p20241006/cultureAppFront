@@ -1,10 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
-import {AuthService} from "../auth/auth.service";
 import {UserService} from "../user/user/user.service";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
+import {CategoryService} from "../events/event-category/category.service";
+import {UiService} from "../common/ui.service";
+import {NgClass, NgForOf} from "@angular/common";
+import {FieldErrorDirective} from "../user-controls/field-error.directive";
 
 @Component({
   selector: 'app-register',
@@ -13,18 +18,42 @@ import {UserService} from "../user/user/user.service";
     MatCardModule,
     ReactiveFormsModule,
     RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FieldErrorDirective,
+    FormsModule,
+    NgForOf,
+    NgClass
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent implements OnInit {
 
-  registerForm: FormGroup;
+  registerForm!: FormGroup;
+  categoriasSeleccionadas: number[] = [];
+
+  categorias = [
+    { id: 1, name: 'Stand up' },
+    { id: 2, name: 'Donación' },
+    { id: 3, name: 'Música' },
+    { id: 4, name: 'Deporte' },
+    { id: 5, name: 'Danza' },
+    { id: 6, name: 'Tecnología' },
+    { id: 7, name: 'Arte & Cultura' },
+    { id: 8, name: 'Comida & Bebidas' },
+    { id: 9, name: 'Festivales' },
+    { id: 10, name: 'Cine' },
+  ];
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private categoriesService: CategoryService,
+    private uiService: UiService
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -37,18 +66,36 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  toggleCategoria(id: number) {
+    if (this.categoriasSeleccionadas.includes(id)) {
+      this.categoriasSeleccionadas = this.categoriasSeleccionadas.filter(catId => catId !== id);
+    } else {
+      this.categoriasSeleccionadas.push(id);
+    }
+  }
 
+  enviarCategorias() {
+    if (this.categoriasSeleccionadas.length >= 3) {
+      this.categoriesService.setCategoriasSeleccionadas(this.categoriasSeleccionadas);
+      alert(this.categoriasSeleccionadas)
+    } else {
+      alert('Selecciona al menos 3 categorías');
+    }
+  }
+
+  ngOnInit(): void {
+
+  }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.userService.register(this.registerForm.value).subscribe({
         next: () => {
-          alert('Registro exitoso. Redirigiendo al login...');
+          this.uiService.showDialog('Registro exitoso',"Se ah registrado correctamente");
           this.router.navigate(['/login']); // Redirige al login
         },
         error: (error) => {
-          console.error('Error al registrar: ', error);
+          alert('Error al registrar: '+ error);
         }
       });
     }

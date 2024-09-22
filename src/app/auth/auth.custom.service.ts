@@ -8,7 +8,8 @@ import { environment } from '../../environments/environment'
 import { transformError } from '../common/common'
 import { IUser, User } from '../user/user/user'
 import { Role } from './auth.enum'
-import { AuthService, IAuthStatus, IServerAuthResponse } from './auth.service'
+import {AuthService, defaultAuthStatus, IAuthStatus, IServerAuthResponse} from './auth.service'
+import {signOut} from "@angular/fire/auth";
 
 interface IJwtToken {
   fullName: string
@@ -27,8 +28,6 @@ interface IJwtToken {
   sub: string
 }
  */
-
-
 
 @Injectable({
   providedIn: 'root',
@@ -50,14 +49,15 @@ export class CustomAuthService extends AuthService {
   protected transformJwtToken(token: IJwtToken): IAuthStatus {
     return {
       isAuthenticated: !!token.sub,
-      userRole: token.authorities[0],
-
-    } as IAuthStatus
+      userRole: token.authorities[token.authorities.length - 1] || 'USER',
+    } as IAuthStatus;
   }
 
   protected getCurrentUser(): Observable<User> {
     return this.httpClient
-      .get<any>(`${environment.baseUrl}/users/me`)
+      .get<IUser>(`${environment.baseUrl}/users/me`)
       .pipe(map(User.Build, catchError(transformError)))
   }
+
+
 }

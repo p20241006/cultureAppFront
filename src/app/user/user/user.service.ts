@@ -16,7 +16,8 @@ export interface IUsers {
 
 export interface IUserService {
   getUser(id: string): Observable<IUser>
-  updateUser(id: string, user: IUser): Observable<IUser>
+
+  updateUser(id: number | string, user: IUser): Observable<IUser>
   getUsers(pageSize: number, searchText: string, pagesToSkip: number): Observable<IUsers>
 }
 
@@ -39,7 +40,7 @@ export class UserService implements IUserService{
     return this.httpClient.get<IUser>(`${environment.baseUrl}/users/${id}`)
   }
 
-  updateUser(id: string, user: IUser): Observable<IUser> {
+  updateUser(id: number | string, user: IUser): Observable<IUser> {
     if (id === '') {
       return throwError(() => 'User id is not set')
     }

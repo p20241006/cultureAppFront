@@ -1,10 +1,10 @@
-export interface IUSState {
+export interface IPEState {
   code: string
   name: string
 }
 
-export function USStateFilter(value: string): IUSState[] {
-  return USStates.filter((state) => {
+export function USStateFilter(value: string): IPEState[] {
+  return PEStates.filter((state) => {
     return (
       (state.code.length === 2 && state.code.toLowerCase() === value.toLowerCase()) ||
       state.name.toLowerCase().indexOf(value.toLowerCase()) === 0
@@ -12,7 +12,7 @@ export function USStateFilter(value: string): IUSState[] {
   })
 }
 
-const USStates = [
+const PEStates = [
   { code: 'AM', name: 'Amazonas' },
   { code: 'AN', name: 'Áncash' },
   { code: 'AP', name: 'Apurímac' },
@@ -39,3 +39,5 @@ const USStates = [
   { code: 'TU', name: 'Tumbes' },
   { code: 'UC', name: 'Ucayali' },
 ]
+
+

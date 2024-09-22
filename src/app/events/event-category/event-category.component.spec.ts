@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavigationMenuComponent } from './navigation-menu.component';
+import { EventCategoryComponent } from './event-category.component';
 
-describe('NavigationMenuComponent', () => {
-  let component: NavigationMenuComponent;
-  let fixture: ComponentFixture<NavigationMenuComponent>;
+describe('EventCategoryComponent', () => {
+  let component: EventCategoryComponent;
+  let fixture: ComponentFixture<EventCategoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavigationMenuComponent]
+      imports: [EventCategoryComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavigationMenuComponent);
+    fixture = TestBed.createComponent(EventCategoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

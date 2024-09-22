@@ -1,26 +1,27 @@
-import { Component } from '@angular/core';
+import {Component,OnInit} from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
-import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
-import {DomSanitizer} from "@angular/platform-browser";
+import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
-import {NgOptimizedImage} from "@angular/common";
-import {NavigationMenuComponent} from "./navigation-menu/navigation-menu.component";
+import {AsyncPipe, NgOptimizedImage} from "@angular/common";
+import {AuthService} from "./auth/auth.service";
+import {initFlowbite} from "flowbite";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, NavigationMenuComponent],
+  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, AsyncPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'cultureAppFront';
 
-  constructor(iconRegistry: MatIconRegistry, sanitizer:DomSanitizer) {
-    iconRegistry.addSvgIcon(
-      'chilli',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/chilli.svg'),
-    )
+  constructor(
+    public authService: AuthService,
+  ) {}
+
+  ngOnInit() {
+    initFlowbite();
   }
 }

@@ -44,7 +44,7 @@ export class UiService {
       message,
       action,
       config || {
-        duration: 7000,
+        duration: 3000,
       }
     )
   }

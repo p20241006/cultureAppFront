@@ -1,29 +1,51 @@
-import {Component,OnInit} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
-import {AsyncPipe, NgOptimizedImage} from "@angular/common";
+import {AsyncPipe, NgClass, NgOptimizedImage} from "@angular/common";
 import {AuthService} from "./auth/auth.service";
 import {initFlowbite} from "flowbite";
 
 //PrimeNg
-import { PrimeNGConfig} from "primeng/api";
+import {MenuItem, PrimeNGConfig} from "primeng/api";
 import {NgxUiLoaderModule} from "ngx-ui-loader";
+import {FormsModule} from "@angular/forms";
+import {ChipsModule} from "primeng/chips";
+import {MenuModule} from "primeng/menu";
+import {Button} from "primeng/button";
+import {AvatarModule} from "primeng/avatar";
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, AsyncPipe, NgxUiLoaderModule],
+  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, AsyncPipe, NgxUiLoaderModule, NgClass, FormsModule, ChipsModule, MenuModule, Button, AvatarModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit{
   title = 'cultureAppFront';
+  selectedOption: string = 'nada'; // Opción seleccionada por defecto (ciudad en este caso)
+  searchQuery: string = '';
+  items: MenuItem[] | undefined;
+
+  search() {
+    if (this.searchQuery.trim() !== '') {
+      // Lógica para manejar la búsqueda
+      console.log('Buscando:', this.searchQuery);
+    }
+  }
+
+  selectOption(option: string) {
+    this.selectedOption = option;
+  }
 
   constructor(
     public authService: AuthService,
-    private primeNGConfig: PrimeNGConfig
+    private primeNGConfig: PrimeNGConfig,
+  private router: Router
   ) {}
 
   ngOnInit() {
@@ -48,6 +70,39 @@ export class AppComponent implements OnInit{
       menu: 1000,
       tooltip: 1100
     }
+    this.items = [
+      {
+        label: 'Profile',
+        items: [
+          {
+            label: 'Mi perfil',
+            icon: 'pi pi-user',
+            command: () => {
+              this.router.navigate(['/user/profile']);
+            }
+          },
+          {
+            label: 'Mis Favoritos',
+            icon: 'pi pi-heart',
+            command: () => {
+              this.router.navigate(['/events/favorite']);
+            }
+          },
+          {
+            label: 'Logout',
+            icon: 'pi pi-sign-out',
+            command: () => {
+              this.router.navigate(['/user/logout']);
+            }
+          }
+        ]
+      },
+      {
+        separator: true
+      }
+    ];
     initFlowbite();
   }
+
+  protected readonly events = module
 }

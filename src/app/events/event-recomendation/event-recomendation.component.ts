@@ -11,6 +11,8 @@ import { TagModule } from "primeng/tag";
 import { CardModule } from "primeng/card";
 import { MatButtonModule } from "@angular/material/button";
 import { GalleriaModule } from "primeng/galleria";
+import {ActivatedRoute, RouterLink} from "@angular/router";
+import {EventCategoryComponent} from "../event-category/event-category.component";
 
 @Component({
   selector: 'app-event-recomendation',
@@ -27,7 +29,9 @@ import { GalleriaModule } from "primeng/galleria";
     TagModule,
     CardModule,
     MatButtonModule,
-    GalleriaModule
+    GalleriaModule,
+    RouterLink,
+    EventCategoryComponent
   ],
   templateUrl: './event-recomendation.component.html',
   styleUrls: ['./event-recomendation.component.scss' // Corregido el nombre de la propiedad
@@ -37,10 +41,12 @@ export class EventRecomendationComponent implements OnInit {
 
   eventsCarrusel$: Observable<Event_model[]> = new Observable();
   eventsCards$: Observable<Event_model[]> = new Observable();
-  private eventoService = inject(EventService);
+  eventoService = inject(EventService);
   responsiveOptions: any[] | undefined;
 
-  constructor() { }
+  constructor(
+
+  ) { }
 
   ngOnInit(): void {
     this.fetchEventos();
@@ -66,7 +72,7 @@ export class EventRecomendationComponent implements OnInit {
   }
 
   fetchEventos(): void {
-    const eventos$ = this.eventoService.getEventos(); // Obtenemos un observable de eventos
+    const eventos$ = this.eventoService.getEventos();
 
     // Filtramos los eventos para el carrusel y las cards
     this.eventsCarrusel$ = eventos$.pipe(

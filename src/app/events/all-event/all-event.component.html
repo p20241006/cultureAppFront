@@ -1,0 +1,50 @@
+@if ( events$ | async; as carouselEvent){
+  <div class="event-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  @for (event of carouselEvent; track event.id) {
+    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow m-2 p-3">
+      <div class="mb-3">
+        <div class="relative mx-auto">
+          <img
+            [src]="event.imgEvent"
+            [alt]="event.title"
+            width="200"
+            height="200"
+            class="w-full border-round"
+          />
+          <p-tag
+            [value]="event.company"
+            [severity]="getSeverity(event.company)"
+            class="absolute"
+            [ngStyle]="{ 'left.px': 5, 'top.px': 5 }"
+          ></p-tag>
+        </div>
+      </div>
+      <div class="mb-3 font-medium">{{ event.rate }}</div>
+      <div class="mb-3 font-medium">{{ event.title }}</div>
+      <div class="mb-2">
+        <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
+        {{ event.start_date }} - {{ event.end_date }}
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="mt-0 font-semibold text-xl">{{ 'S/' + event.price }}</div>
+        <span>
+          <p-button icon="pi pi-heart" severity="secondary" [outlined]="true"></p-button>
+        </span>
+      </div>
+      <div class="flex items-center justify-end mt-2">
+        <button [routerLink]="['/events/details', event.id]" mat-flat-button class="bg-green-500">
+          Ver evento
+        </button>
+      </div>
+    </div>
+  }
+  </div>
+
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    aria-label="Select page"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
+}

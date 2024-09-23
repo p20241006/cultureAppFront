@@ -77,7 +77,6 @@ export class RegisterComponent implements OnInit {
   enviarCategorias() {
     if (this.categoriasSeleccionadas.length >= 3) {
       this.categoriesService.setCategoriasSeleccionadas(this.categoriasSeleccionadas);
-      alert(this.categoriasSeleccionadas)
     } else {
       alert('Selecciona al menos 3 categorías');
     }
@@ -86,12 +85,11 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.userService.register(this.registerForm.value).subscribe({
         next: () => {
-          this.uiService.showDialog('Registro exitoso',"Se ah registrado correctamente");
+          this.uiService.showDialog('Registro exitoso',"Usted se ah registrado correctamente");
           this.router.navigate(['/login']); // Redirige al login
         },
         error: (error) => {

@@ -42,6 +42,7 @@ import { UserService } from '../user/user.service'
 import {IPEState, USStateFilter} from './data'
 import {FieldErrorDirective} from "../../user-controls/field-error.directive";
 import {ActivatedRoute} from "@angular/router";
+import {ButtonDirective} from "primeng/button";
 
 @Component({
   selector: 'app-profile',
@@ -66,6 +67,7 @@ import {ActivatedRoute} from "@angular/router";
     MatIconModule,
     MatSelectModule,
     AsyncPipe,
+    ButtonDirective,
   ],
 })
 export class ProfileComponent

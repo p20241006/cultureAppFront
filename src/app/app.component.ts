@@ -9,11 +9,12 @@ import {initFlowbite} from "flowbite";
 
 //PrimeNg
 import { PrimeNGConfig} from "primeng/api";
+import {NgxUiLoaderModule} from "ngx-ui-loader";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, AsyncPipe],
+  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, AsyncPipe, NgxUiLoaderModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

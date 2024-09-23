@@ -4,6 +4,7 @@ import {EventsComponent} from "./events.component";
 import {EventHomeComponent} from "./event-home/event-home.component";
 import {EventPopularComponent} from "./event-popular/event-popular.component";
 import {EventRecomendationComponent} from "./event-recomendation/event-recomendation.component";
+import {EventFavoriteComponent} from "./event-favorite/event-favorite.component";
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
       { path: 'home', component: EventHomeComponent },
       { path: 'popular', component: EventPopularComponent },
       { path: 'recommendation', component: EventRecomendationComponent },
+      { path: 'favorite', component: EventFavoriteComponent },
     ],
   },
 ];

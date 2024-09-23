@@ -22,6 +22,7 @@ import {CustomAuthService} from "./auth/auth.custom.service";
 import {provideUiService} from "./common/ui.service";
 import {MessageService} from "primeng/api";
 import {provideAnimations} from "@angular/platform-browser/animations";
+import {NgxUiLoaderModule} from "ngx-ui-loader";
 //PrimeNg
 
 
@@ -47,7 +48,8 @@ export const appConfig: ApplicationConfig = {
     },
     //PrimeNg
     MessageService,
-    provideAnimations()
+    provideAnimations(),
+    NgxUiLoaderModule
   ]
 };
 

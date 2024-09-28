@@ -2,11 +2,13 @@ import {inject, Injectable} from '@angular/core';
 import {IUser, User} from "./user";
 import {Observable, throwError} from "rxjs";
 import {CacheService} from "../../common/cache.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "../../auth/auth.service";
 import {environment} from "../../../environments/environment";
 import {catchError, map} from "rxjs/operators";
 import {transformError} from "../../common/common";
+import {UserRequest} from "../model/user-request.model";
+import {UserResponse} from "../model/user-response.model";
 
 
 export interface IUsers {
@@ -83,10 +85,30 @@ export class UserService implements IUserService{
     })
   }
 
-  private baseUrl = 'http://localhost:8088/api/v1/auth';
 
   register(userData: any): Observable<any> {
     return this.httpClient.post<any>(`http://localhost:8088/api/v1/auth/register`, userData);
   }
+
+  actualizarUsuario(userId: number, userRequest: UserRequest): Observable<any> {
+    const url = `${environment.baseUrl}/users/${userId}`;
+    return this.httpClient.put(url, userRequest, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    });
+  }
+
+  // Método para obtener los eventos con paginación
+  getAllSolicitudRol(): Promise<UserResponse[]> {
+    // @ts-ignore
+    return this.httpClient.get<UserResponse[]>(`${environment.baseUrl}/users/envio-formulario`).toPromise();
+  }
+
+  addRole(userId: number | undefined, roleName: string): Observable<any> {
+    return this.httpClient.post(`${environment.baseUrl}/users/${userId}/roles`, { roleName });
+  }
+
+
 
 }

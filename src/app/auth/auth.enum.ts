@@ -1,8 +1,8 @@
 export enum Role {
   None = 'none',
   User = 'USER',  //clerk
-  adminEvents = 'ADMIN',  //admin
-  Manager = 'MODERADOR',  //manager
+  Manager = 'MANAGER',  //admin
+  Admin = 'ADMIN',  //manager
 }
 
 export enum AuthMode {

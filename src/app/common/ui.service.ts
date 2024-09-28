@@ -14,6 +14,13 @@ import { patchState, signalState } from '@ngrx/signals'
 import { Observable } from 'rxjs'
 
 import { SimpleDialogComponent } from './simple-dialog.component'
+import {MessageService} from "primeng/api";
+
+export function provideUiService() {
+  return makeEnvironmentProviders([
+    importProvidersFrom(MatDialogModule, MatSnackBarModule),
+  ])
+}
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +28,7 @@ import { SimpleDialogComponent } from './simple-dialog.component'
 export class UiService {
   private readonly snackBar = inject(MatSnackBar)
   private readonly dialog = inject(MatDialog)
+
 
   private readonly loadState = signalState({ count: 0, isLoading: false })
   isLoading = computed(() => this.loadState.isLoading())
@@ -49,6 +57,7 @@ export class UiService {
     )
   }
 
+
   showDialog(
     title: string,
     content: string,
@@ -66,10 +75,4 @@ export class UiService {
 
     return dialogRef.afterClosed()
   }
-}
-
-export function provideUiService() {
-  return makeEnvironmentProviders([
-    importProvidersFrom(MatDialogModule, MatSnackBarModule),
-  ])
 }

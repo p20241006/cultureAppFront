@@ -4,20 +4,20 @@
     alt="Foto de usuario"
     class="w-32 h-32 rounded-full border-4 border-teal-300 mb-4" />
 
-  <h2 class="text-2xl font-bold text-gray-800 mb-2">Pedro Gallo</h2>
+  <h2 class="text-2xl font-bold text-gray-800 mb-2">{{userMe.currentUser$.value.fullName}}</h2>
 
   <div class="text-gray-600 mb-4">
     <p class="flex items-center mb-2">
       <i class="pi pi-envelope mr-2" style="color: var(--primary-color);"></i>
-      <span>admin&#64;gmail.com</span>
+      <span>{{userMe.currentUser$.value.email}}</span>
     </p>
     <p class="flex items-center mb-2">
       <i class="pi pi-phone mr-2" style="color: var(--primary-color);"></i>
-      <span>(123) 456-7890</span>
+      <span>Celular: {{userMe.currentUser$.value.phone}}</span>
     </p>
     <p class="flex items-center mb-2">
       <i class="pi pi-map-marker mr-2" style="color: var(--primary-color);"></i>
-      <span>Calle Ejemplo 123, Ciudad</span>
+      <span>{{userMe.currentUser$.value.role}}</span>
     </p>
   </div>
 

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManagerHomeComponent } from './manager-home.component';
+import { EventAddedComponent } from './event-added.component';
 
-describe('ManagerHomeComponent', () => {
-  let component: ManagerHomeComponent;
-  let fixture: ComponentFixture<ManagerHomeComponent>;
+describe('EventAddedComponent', () => {
+  let component: EventAddedComponent;
+  let fixture: ComponentFixture<EventAddedComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManagerHomeComponent]
+      imports: [EventAddedComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ManagerHomeComponent);
+    fixture = TestBed.createComponent(EventAddedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

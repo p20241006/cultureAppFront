@@ -9,7 +9,7 @@ export interface IName {
 }
 
 export interface IUser {
-  _id: number
+  id: number
   email: string
   //password: string
   //dateOfBirth: Date | null | string
@@ -22,13 +22,12 @@ export interface IUser {
   accountLocked: boolean
   accountActive: boolean
   role?: Role | string
-
 }
 
 export class User implements IUser {
   constructor(
     // tslint:disable-next-line: variable-name
-    public _id = 0,
+    public id = 0,
     public email = '',
     //public password ='',
     //public dateOfBirth: Date | null = null,
@@ -50,7 +49,7 @@ export class User implements IUser {
     }*/
 
     return new User(
-      user._id,
+      user.id,
       user.email,
       //user.password,
     //typeof user.dateOfBirth === 'string' ? new Date(user.dateOfBirth): user.dateOfBirth,

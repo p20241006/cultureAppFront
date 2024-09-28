@@ -11,7 +11,7 @@ import {User} from "../user/user/user";
 export class InMemoryAuthService extends AuthService {
   private defaultUser = User.Build({
 
-    _id: 25878,
+    id: 25878,
     email:'wfuturi@gmail.com',
     //password:'12345678',
     //dateOfBirth: new Date(1995, 10, 10),
@@ -49,10 +49,10 @@ export class InMemoryAuthService extends AuthService {
       //userId: this.defaultUser._id,
       userRole: email.includes('user')
         ? Role.User
-        : email.includes('adminEvents')
-          ? Role.adminEvents
-          : email.includes('manager')
-            ? Role.Manager
+        : email.includes('manager')
+          ? Role.Manager
+          : email.includes('admin')
+            ? Role.Admin
             : Role.None,
     } as IAuthStatus
 

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -15,12 +15,34 @@ import {ChipsModule} from "primeng/chips";
 import {MenuModule} from "primeng/menu";
 import {Button} from "primeng/button";
 import {AvatarModule} from "primeng/avatar";
+import {MatDialog} from "@angular/material/dialog";
+import {OrganizerEventComponent} from "./user/organizer-event/organizer-event.component";
+import {EventService} from "./events/services/event.service";
+import {SearchService} from "./events/services/search.service";
+import {AllEventComponent} from "./events/all-event/all-event.component";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatIconModule, RouterLink, MatButtonModule, NgOptimizedImage, AsyncPipe, NgxUiLoaderModule, NgClass, FormsModule, ChipsModule, MenuModule, Button, AvatarModule],
+  imports: [
+    RouterOutlet,
+    MatToolbarModule,
+    MatIconModule,
+    RouterLink,
+    MatButtonModule,
+    NgOptimizedImage,
+    AsyncPipe,
+    NgxUiLoaderModule,
+    NgClass,
+    FormsModule,
+    ChipsModule,
+    MenuModule,
+    Button,
+    AvatarModule,
+    OrganizerEventComponent,
+    AllEventComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,12 +52,23 @@ export class AppComponent implements OnInit{
   selectedOption: string = 'nada'; // Opción seleccionada por defecto (ciudad en este caso)
   searchQuery: string = '';
   items: MenuItem[] | undefined;
+  authService = inject(AuthService)
+  eventService = inject(EventService);
+  searchService = inject(SearchService)
+  @Output() searchEvent = new EventEmitter<string>(); // Emisor de eventos
 
-  search() {
-    if (this.searchQuery.trim() !== '') {
-      // Lógica para manejar la búsqueda
-      console.log('Buscando:', this.searchQuery);
-    }
+  readonly dialog = inject(MatDialog);
+
+  openDialog() {
+    const dialogRef = this.dialog.open(OrganizerEventComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  onSearch() {
+    this.searchEvent.emit(this.searchQuery); // Emitir el término de búsqueda
   }
 
   selectOption(option: string) {
@@ -43,7 +76,6 @@ export class AppComponent implements OnInit{
   }
 
   constructor(
-    public authService: AuthService,
     private primeNGConfig: PrimeNGConfig,
   private router: Router
   ) {}

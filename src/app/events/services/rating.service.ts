@@ -8,14 +8,13 @@ import {Rating} from "../model/rate.model";
 })
 export class RatingService {
 
-  private apiUrl = 'http://localhost:8088/api/v1/feedbacks'; // Cambia a tu API real
+  private apiUrl = 'http://localhost:8088/api/v1/preferences/rate'; // Cambia a tu API real
 
   constructor(private http: HttpClient) { }
 
-  enviarPuntuacion(eventId: number, note: number, comment: string = ''): Observable<any> {
+  enviarPuntuacion(eventId: number, rating: number): Observable<any> {
     const body = {
-      note,
-      comment,
+      rating,
       eventId
     };
     return this.http.post(this.apiUrl, body);

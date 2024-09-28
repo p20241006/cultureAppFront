@@ -4,7 +4,9 @@ import {RouterOutlet} from "@angular/router";
 import {EventHomeComponent} from "./event-home/event-home.component";
 import {initFlowbite} from "flowbite";
 import {EventCategoryComponent} from "./event-category/event-category.component";
-import {EventService} from "./event.service";
+import {EventService} from "./services/event.service";
+import {RatingService} from "./services/rating.service";
+
 
 @Component({
   selector: 'app-events',
@@ -15,7 +17,7 @@ import {EventService} from "./event.service";
     EventHomeComponent,
     EventCategoryComponent
   ],
-  providers: [EventService],
+  providers: [EventService, RatingService],
   template: `
     <router-outlet></router-outlet>
   `,

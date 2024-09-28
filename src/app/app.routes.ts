@@ -11,11 +11,11 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login/:redirectUrl', component: LoginComponent },
   {
-    path: 'manager',
-    loadChildren: () => import('./manager/manager.module').then(m=> m.ManagerModule),
+    path: 'administrator',
+    loadChildren: () => import('./administrator/administrator.module').then(m=> m.AdministratorModule),
     canMatch: [authGuard],
     data: {
-      expectedRole: Role.Manager,
+      expectedRole: Role.Admin,
     }
   },
   {

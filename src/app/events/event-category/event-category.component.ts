@@ -1,6 +1,6 @@
 import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {CategoryService} from "./category.service";
-import {Event_model} from "../event_model";
+import {EventModel} from "../model/event.model";
 import {AsyncPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Button} from "primeng/button";
 import {CarouselModule} from "primeng/carousel";
@@ -33,7 +33,7 @@ export class EventCategoryComponent implements OnInit{
   categoryService = inject(CategoryService);
   responsiveOptions: any[] | undefined;
 
-  eventCategory = signal<Event_model[] | undefined>(undefined)
+  eventCategory = signal<EventModel[] | undefined>(undefined)
   public eventsCategories = computed(()=> this.eventCategory())
 
   constructor(

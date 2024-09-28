@@ -1,4 +1,4 @@
-export interface Event_model {
+export interface EventModel {
   id: number;               // Identificador único del evento
   title: string;            // Título del evento
   description: string;  //Descripción del evento
@@ -17,8 +17,9 @@ export interface Event_model {
   shareable: boolean;       // Indica si el evento es compartible
 }
 
+
 export interface EventoResponse {
-  content: Event_model[];
+  content: EventModel[];
   number: number;         // Página actual
   size: number;           // Tamaño de la página
   totalElements: number;   // Total de eventos

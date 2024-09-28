@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { EventService } from "../event.service";
-import { Event_model } from "../event_model";
+import {ActivatedRoute, RouterLink} from "@angular/router";
+import { EventService } from "../services/event.service";
+import { EventModel } from "../model/event.model";
 import { Observable } from "rxjs";
 import {RatingService} from "../services/rating.service";
 import {Button} from "primeng/button";
@@ -20,7 +20,8 @@ import {AsyncPipe} from "@angular/common";
     FormsModule,
     DialogModule,
     RatingModule,
-    AsyncPipe
+    AsyncPipe,
+    RouterLink
   ],
   styleUrls: ['./event-details.component.scss']
 })
@@ -29,10 +30,9 @@ export class EventDetailsComponent implements OnInit {
   route = inject(ActivatedRoute);
   eventService = inject(EventService);
   ratingService = inject(RatingService); // Inyecta el servicio de Rating
-  eventDetail$: Observable<Event_model> = new Observable();
+  eventDetail$: Observable<EventModel> = new Observable();
   idEvento: number = 0;
   value!: number; // Valor del rating (puntuación)
-  comment: string = 'Sin commentarios'; // Comentario del usuario
   visible: boolean = false; // Control de visibilidad del diálogo
 
   constructor() {}
@@ -53,7 +53,7 @@ export class EventDetailsComponent implements OnInit {
   guardarPuntuacion(): void {
     if (this.value) {
       // Llamar al servicio para enviar la puntuación y el comentario
-      this.ratingService.enviarPuntuacion(this.idEvento, this.value, this.comment).subscribe({
+      this.ratingService.enviarPuntuacion(this.idEvento, this.value).subscribe({
         next: (response) => {
           console.log('Puntuación enviada con éxito', response);
           this.visible = false; // Cerrar el diálogo después de guardar

@@ -18,16 +18,7 @@ interface IJwtToken {
   exp: number
   authorities: string[]
 }
-/*
-interface IJwtToken {
-  email: string
-  role: string
-  picture: string
-  iat: number
-  exp: number
-  sub: string
-}
- */
+
 
 @Injectable({
   providedIn: 'root',

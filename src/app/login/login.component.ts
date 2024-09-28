@@ -106,12 +106,12 @@ export class LoginComponent implements OnInit{
 
   private homeRoutePerRole(role: Role) {
     switch (role) {
+      case Role.Admin:
+        return '/administrator'
+      case Role.Manager:
+        return '/events'
       case Role.User:
         return '/events'
-      case Role.adminEvents:
-        return '/events'
-      case Role.Manager:
-        return '/manager'
       default:
         return '/user/profile'
     }

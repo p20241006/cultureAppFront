@@ -20,9 +20,11 @@
               <p class="mt-4">Costo: S/.{{detailEvent.price}}</p>
             </div>
             <div class="text-center mt-6">
-              <button type="button" routerLink="/events/home" class="rounded-lg px-5 py-2.5 text-sm font-medium text-white bg-blue-600 border border-black hover:bg-blue-700 focus:outline-none">
-                Ver Página Principal
-              </button>
+             <a href="{{detailEvent.urlEvent}}" target="_blank">
+               <button type="button" class="rounded-lg px-5 py-2.5 text-sm font-medium text-white bg-blue-600 border border-black hover:bg-blue-700 focus:outline-none">
+                 Ver Página Principal
+               </button>
+             </a>
             </div>
           </div>
         </div>
@@ -35,7 +37,7 @@
                 Dar Puntuación
               </button>
               <div class="card flex justify-content-center">
-                <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+                <p-dialog header="Calificacion" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
                   <p-rating [(ngModel)]="value" stars="5">
                     <ng-template pTemplate="cancelicon">
                       <img

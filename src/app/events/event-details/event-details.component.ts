@@ -9,6 +9,7 @@ import {FormsModule} from "@angular/forms";
 import {DialogModule} from "primeng/dialog";
 import {RatingModule} from "primeng/rating";
 import {AsyncPipe} from "@angular/common";
+import {DockModule} from "primeng/dock";
 
 
 @Component({
@@ -21,7 +22,8 @@ import {AsyncPipe} from "@angular/common";
     DialogModule,
     RatingModule,
     AsyncPipe,
-    RouterLink
+    RouterLink,
+    DockModule
   ],
   styleUrls: ['./event-details.component.scss']
 })
@@ -88,4 +90,5 @@ export class EventDetailsComponent implements OnInit {
     return categoria ? categoria.nombre : 'Categoría no encontrada';
   }
 
+  protected readonly Boolean = Boolean;
 }

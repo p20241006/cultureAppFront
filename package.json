@@ -30,6 +30,7 @@
     "firebase": "^10.13.1",
     "flowbite": "^2.5.1",
     "jwt-decode": "^4.0.0",
+    "ng-let": "^18.0.3",
     "ng-mocks": "^14.13.1",
     "ngx-ui-loader": "^13.0.0",
     "primeicons": "^7.0.0",

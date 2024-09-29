@@ -15,7 +15,7 @@ import {ActivatedRoute, RouterLink} from "@angular/router";
 import {EventCategoryComponent} from "../event-category/event-category.component";
 import {UserTableComponent} from "../../administrator/user-table/user-table.component";
 import {AuthService} from "../../auth/auth.service";
-import {RecommendedEvent} from "../model/event-gnn";
+import {RecommendedEvent, RecommendedEventsResponse} from "../model/event-gcn";
 import {UiService} from "../../common/ui.service";
 import {FavoriteService} from "../services/favorite.service";
 
@@ -23,21 +23,8 @@ import {FavoriteService} from "../services/favorite.service";
 @Component({
   selector: 'app-event-recomendation',
   standalone: true,
-  imports: [
-    NgClass,
-    NgForOf,
-    NgStyle,
-    NgOptimizedImage,
-    NgIf,
-    AsyncPipe,
-    CarouselModule,
-    Button,
-    TagModule,
-    CardModule,
-    MatButtonModule,
-    GalleriaModule,
-    RouterLink,
-    EventCategoryComponent,
+  imports: [NgClass,NgForOf,NgStyle,NgOptimizedImage,NgIf,AsyncPipe,CarouselModule,Button,
+    TagModule,CardModule,MatButtonModule,GalleriaModule,RouterLink,EventCategoryComponent,
     UserTableComponent,
   ],
   templateUrl: './event-recomendation.component.html',
@@ -46,31 +33,31 @@ import {FavoriteService} from "../services/favorite.service";
 })
 export class EventRecomendationComponent implements OnInit {
 
+  // ARREGLO DE OBSERVABLES
   eventsCarrusel$: Observable<EventModel[]> = new Observable();
   eventsCards$: Observable<EventModel[]> = new Observable();
+  eventsRecomendacion$: Observable<RecommendedEvent[]> = new Observable();
+
+
+  // SERVICIOS
   eventoService = inject(EventService);
-  responsiveOptions: any[] | undefined;
-  events$: Observable<RecommendedEvent[]> = new Observable();
   authService = inject(AuthService)
   uiService =  inject(UiService);
   favoriteService = inject(FavoriteService);
 
-  recommendedEvents: RecommendedEvent[] = [];
-  loading: boolean = true;
+
+
+  responsiveOptions: any[] | undefined;
   error: string | null = null;
 
 
-
-
-  constructor(
-
-  ) { }
+  constructor() {}
 
   ngOnInit(): void {
     this.fetchEventos();
     let id = this.authService.currentUser$.value.id;
-    this.fetchRecommendedEvents(3);
     initFlowbite();
+    this.loadRecommendedEvents(3);
 
     this.responsiveOptions = [
       {
@@ -91,33 +78,41 @@ export class EventRecomendationComponent implements OnInit {
     ];
   }
 
+  // FUNCION QUE TRAE TODOS LOS EVENTOS PROXIMOS
   fetchEventos(): void {
-    const eventosRecomendados$ = this.eventoService.getEventos();
+    const eventosProximos$ = this.eventoService.getEventos();
 
-    this.eventsCarrusel$ = eventosRecomendados$.pipe(
-      map(data => data.slice(0, 3))
+    // Cargar los eventos en el carrusel y las tarjetas
+    this.eventsCarrusel$ = eventosProximos$.pipe(
+      map(data => {
+        // Obtener los primeros 3 eventos
+        const carruselEvents = data.slice(0, 3);
+        // Cargar el estado de favorito para cada evento en el carrusel
+        carruselEvents.forEach(event => this.loadEventFavorites(event.id));
+        return carruselEvents;
+      })
     );
 
-    this.eventsCards$ = eventosRecomendados$.pipe(
-      map(data => data.slice(3))
+    this.eventsCards$ = eventosProximos$.pipe(
+      map(data => {
+        // Obtener el resto de eventos
+        const cardEvents = data.slice(3);
+        // Cargar el estado de favorito para cada evento en las tarjetas
+        cardEvents.forEach(event => this.loadEventFavorites(event.id));
+        return cardEvents;
+      })
     );
   }
 
-  fetchRecommendedEvents(userId: number): void {
-    this.eventoService.getRecommendedEvents(userId).subscribe({
-      next: (response) => {
-        this.recommendedEvents = response.recommended_events;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = 'Error al cargar los eventos recomendados';
-        this.loading = false;
-      }
-    });
+  loadRecommendedEvents(userId: number): void {
+    this.eventsRecomendacion$ = this.eventoService.getEventsById(userId).pipe(
+      map((response: RecommendedEventsResponse) => {
+        const recommendedEvents = response.recommended_events;
+        recommendedEvents.forEach(event => this.loadEventFavorites(event.id));
+        return recommendedEvents;
+      })
+    );
   }
-
-
 
   // @ts-ignore
   getSeverity(status: string) {
@@ -131,12 +126,6 @@ export class EventRecomendationComponent implements OnInit {
     }
   }
 
-  event = {
-    rate: 0 // Ejemplo de valor de rate
-  };
-
-  isLiked = false;
-
   // Función para devolver un arreglo de estrellas
   getStars(rate: number): { filled: boolean }[] {
     const totalStars = 5; // Total de estrellas a mostrar
@@ -148,16 +137,23 @@ export class EventRecomendationComponent implements OnInit {
   likedEvents: { [key: number]: boolean } = {}; // Almacena los likes de cada evento por su ID
 
 
-  // Verifica si un evento está liked
-  isEventLiked(eventId: number): boolean {
-    return this.likedEvents[eventId];
+  // Cargar el estado de favorito de un evento
+  loadEventFavorites(eventId: number) {
+    this.favoriteService.statusFavoriteEvent(eventId).subscribe({
+      next: (isFavorite: boolean) => {
+        this.likedEvents[eventId] = isFavorite; // Asignar el estado favorito
+      },
+      error: () => {
+        console.error('Error al cargar el estado de favoritos del evento:', eventId);
+      }
+    });
   }
 
+  // Alternar el estado de favorito al hacer clic
   toggleFavorite(eventId: number) {
     this.favoriteService.toggleFavorite(eventId).subscribe({
       next: () => {
-        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Invertimos el estado
-        this.saveLikedEvents(); // Guardamos el nuevo estado en localStorage
+        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Cambiar el estado localmente
         const message = this.likedEvents[eventId] ? 'agregado' : 'removido';
         this.uiService.showToast(`El evento ha sido ${message} de tus favoritos.`);
       },
@@ -167,9 +163,4 @@ export class EventRecomendationComponent implements OnInit {
     });
   }
 
-// Guardar el estado actual de los likes en localStorage
-  saveLikedEvents() {
-    localStorage.setItem('likedEvents', JSON.stringify(this.likedEvents));
-  }
-  display: boolean = false;
 }

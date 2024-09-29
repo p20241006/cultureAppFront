@@ -30,12 +30,11 @@
           <!-- Botón de corazón que cambia de color al hacer clic -->
           <span>
             <button class="p-button-rounded p-button-text like-button"
-                    [ngClass]="{'liked': isEventLiked(event.id)}"
                     (click)="toggleFavorite(event.id)">
               <!-- Corazón no liked (gris) -->
-              <i *ngIf="!isEventLiked(event.id)" class="pi pi-heart"></i>
+              <i *ngIf="!likedEvents[event.id]" class="pi pi-heart"></i>
               <!-- Corazón liked (rojo) -->
-              <i *ngIf="isEventLiked(event.id)" class="pi pi-heart-fill"></i>
+              <i *ngIf="likedEvents[event.id]" class="pi pi-heart-fill"></i>
             </button>
           </span>
         </div>

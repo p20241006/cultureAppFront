@@ -1,7 +1,12 @@
-import {Component, inject, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {EventService} from "../services/event.service";
-import {ConfirmationService, MessageService} from "primeng/api";
+import {MessageService} from "primeng/api";
 import {AsyncPipe, CurrencyPipe, NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {Button, ButtonDirective} from "primeng/button";
 import {ChipsModule} from "primeng/chips";
@@ -10,14 +15,16 @@ import {CardModule} from "primeng/card";
 import {MatButton} from "@angular/material/button";
 import {TagModule} from "primeng/tag";
 import {RouterLink} from "@angular/router";
-import {BehaviorSubject, Observable, switchMap} from "rxjs";
+import {Observable} from "rxjs";
 import {EventModel, EventoResponse} from "../model/event.model";
-import {map, startWith} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {MatPaginator} from "@angular/material/paginator";
 import {MessagesModule} from "primeng/messages";
 import {ToastModule} from "primeng/toast";
 import {DialogModule} from "primeng/dialog";
 import {EventDialogComponent} from "../event-dialog/event-dialog.component";
+import {UiService} from "../../common/ui.service";
+import {FavoriteService} from "../services/favorite.service";
 
 
 @Component({
@@ -47,16 +54,9 @@ import {EventDialogComponent} from "../event-dialog/event-dialog.component";
   ],
   templateUrl: './event-added.component.html',
   styleUrl: './event-added.component.scss'
+
 })
 export class EventAddedComponent implements OnInit {
-
-  eventoForm: FormGroup;
-  mostrarFormulario = false;
-
-  selectedEvent!: EventModel;
-
-  @ViewChild('appEventDialog') eventDialogComponent!: EventDialogComponent;
-
 
   regiones = [
     { id: 1, nombre: 'LIMA' },
@@ -79,15 +79,24 @@ export class EventAddedComponent implements OnInit {
     { id: 13, nombre: 'Otros' },
   ];
 
-  eventos: any[] = []; // Almacenar los eventos para mostrar en cards
+  totalElements: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
+  pageSizeOptions: number[] = [5, 10, 20, 100];
+
+  eventsOwner$: Observable<EventModel[]> = new Observable();
+  likedEvents: { [key: number]: boolean } = {}; // Almacena los likes de cada evento por su ID
+  favoriteService = inject(FavoriteService)
+  uiService = inject(UiService)
+
+  eventoForm: FormGroup;
+  mostrarFormulario = false;
+  eventoService = inject(EventService);
+  fb = inject(FormBuilder);
+  messageService = inject(MessageService);
 
   constructor(
-    private eventoService: EventService,
-    private messageService: MessageService,
-    private fb: FormBuilder,
-
   ) {
-    // Inicializamos el formulario reactivo con validaciones
     this.eventoForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
@@ -102,12 +111,11 @@ export class EventAddedComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.loadEvents(this.currentPage, this.pageSize);
 
+  ngOnInit(): void {
+   this.loadEvents(this.currentPage, this.pageSize);
   }
 
-  // Método para agregar evento
   agregarEvento(): void {
     if (this.eventoForm.valid) {
       this.eventoService.addEvento(this.eventoForm.value).subscribe(
@@ -117,11 +125,9 @@ export class EventAddedComponent implements OnInit {
             summary: 'Éxito',
             detail: 'Evento agregado correctamente',
           });
-
-          // Agregar el evento al arreglo para mostrarlo en las cards
-          this.eventos.push(response);
           this.eventoForm.reset();
           this.mostrarFormulario = false; // Ocultar el formulario después de agregar el evento
+          this.loadEvents(this.currentPage, this.pageSize); // Recargar los eventos para mostrar el nuevo evento
         },
         (error) => {
           this.messageService.add({
@@ -134,26 +140,46 @@ export class EventAddedComponent implements OnInit {
     }
   }
 
-  eventsOwner$: Observable<EventModel[]> = new Observable();
-  totalElements: number = 0;       // Total de eventos
-  pageSize: number = 12;            // Tamaño de la página, 6 *cards* por página
-  currentPage: number = 0;         // Página actual
-  pageSizeOptions: number[] = [5, 10, 20, 100];  // Opciones de tamaño para la paginación
 
-  onEventClick(event: EventModel) {
-    this.selectedEvent = event;
-    this.eventDialogComponent.showDialog(); // Llamar al método showDialog del diálogo
-  }
-
-
-  // Método para cargar los eventos
+  // TODO: ESTE METODO NOS DEVUELVE NUESTROS EVENTOS CREADOS
   loadEvents(page: number, size: number) {
     this.eventsOwner$ = this.eventoService.getAllEventsOwner(page, size).pipe(
       map((response: EventoResponse) => {
         this.totalElements = response.totalElements;
-        return response.content;
+        const events = response.content; // Guardar los eventos en una variable
+        events.forEach(event => {
+          this.loadEventFavorites(event.id); // Cargar el estado favorito de cada evento
+        });
+        return events; // Retornar la lista de eventos
       })
     );
+  }
+
+
+  // TODO: FUNCIONES PARA EL CAMBIO DE ESTADO DEL FAVORITO
+  loadEventFavorites(eventId: number) {
+    this.favoriteService.statusFavoriteEvent(eventId).subscribe({
+      next: (isFavorite: boolean) => {
+        this.likedEvents[eventId] = isFavorite; // Asignar el estado favorito
+      },
+      error: () => {
+        console.error('Error al cargar el estado de favoritos del evento:', eventId);
+      }
+    });
+  }
+
+  // Alternar el estado de favorito al hacer click
+  toggleFavorite(eventId: number) {
+    this.favoriteService.toggleFavorite(eventId).subscribe({
+      next: () => {
+        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Cambiar el estado localmente
+        const message = this.likedEvents[eventId] ? 'agregado' : 'removido';
+        this.uiService.showToast(`El evento ha sido ${message} de tus favoritos.`);
+      },
+      error: () => {
+        this.uiService.showToast('Error al cambiar el estado de favorito.');
+      }
+    });
   }
 
   onPageChange(event: any) {
@@ -174,37 +200,16 @@ export class EventAddedComponent implements OnInit {
     }
   }
 
-  event = {
-    rate: 0 // Ejemplo de valor de rate
-  };
-
-  isLiked = false;
-
-  // Función para devolver un arreglo de estrellas
+  // TODO: FUNCION DE ESTRELLAS
   getStars(rate: number): { filled: boolean }[] {
     const totalStars = 5; // Total de estrellas a mostrar
     return Array.from({ length: totalStars }, (_, index) => ({
       filled: index < rate // Determina si la estrella debe ser dorada o gris
     }));
   }
-  likedEvents: { [key: number]: boolean } = {}; // Almacena los likes de cada evento por su ID
-
-  // Función para alternar el estado de "like" de un evento
-  toggleLike(eventId: number) {
-    // Si el evento ya está en el estado de liked, lo cambiamos
-    if (this.likedEvents[eventId]) {
-      this.likedEvents[eventId] = false;
-    } else {
-      this.likedEvents[eventId] = true;
-    }
-  }
-
-  // Verifica si un evento está liked
-  isEventLiked(eventId: number): boolean {
-    return this.likedEvents[eventId];
-  }
 
 
+  // TODO: LO RELACIONADO A MI FORMULARIO
   display: boolean = false; // Controla la visibilidad del diálogo
   selectedEventId: number | null = null;
 
@@ -230,6 +235,12 @@ export class EventAddedComponent implements OnInit {
 
   onReject() {
     this.display = false; // Oculta el diálogo al rechazar
+  }
+
+  @ViewChild('appEventDialog') eventDialogComponent!: EventDialogComponent;
+  onEventClick(eventOwner: EventModel) {
+    this.eventDialogComponent.eventOwner = eventOwner;
+    this.eventDialogComponent.openEditDialog();
   }
 
 

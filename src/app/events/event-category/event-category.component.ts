@@ -34,7 +34,6 @@ export class EventCategoryComponent implements OnInit{
   responsiveOptions: any[] | undefined;
 
   eventCategory = signal<EventModel[] | undefined>(undefined)
-  public eventsCategories = computed(()=> this.eventCategory())
 
   constructor(
   ) {

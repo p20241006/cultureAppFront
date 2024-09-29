@@ -1,15 +1,14 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject,OnInit} from '@angular/core';
 import {EventModel, EventoResponse} from "../model/event.model";
 import {EventService} from "../services/event.service";
-import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
+import { MatPaginatorModule} from "@angular/material/paginator";
 import {TagModule} from "primeng/tag";
 import {AsyncPipe, NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {Button} from "primeng/button";
 import {RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
-import {BehaviorSubject, Observable, of, switchMap} from "rxjs";
-import {map, startWith} from "rxjs/operators";
-import {SearchService} from "../services/search.service";
+import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
 import {UiService} from "../../common/ui.service";
 import {FavoriteService} from "../services/favorite.service";
 
@@ -42,7 +41,7 @@ export class AllEventComponent implements OnInit{
   uiService = inject(UiService);
   favoriteService = inject(FavoriteService);
 
-  constructor(private eventService: EventService, private searchService:SearchService) {}
+  constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
     // Suscribirse a los cambios en la búsqueda

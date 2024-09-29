@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {EventService} from "../services/event.service";
 import {MessageService} from "primeng/api";
@@ -8,6 +17,7 @@ import {EventModel} from "../model/event.model";
 import {ChipsModule} from "primeng/chips";
 import {ButtonModule} from "primeng/button";
 import {InputTextareaModule} from "primeng/inputtextarea";
+
 
 @Component({
   selector: 'app-event-dialog',
@@ -25,9 +35,10 @@ import {InputTextareaModule} from "primeng/inputtextarea";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventDialogComponent implements OnInit {
-  @Input() event!: EventModel;       // Recibirás el evento al cual le diste click
+
   eventForm!: FormGroup;
   display: boolean = false;
+  @Input() eventOwner!: EventModel;
 
   constructor(private fb: FormBuilder, private eventService: EventService, private messageService: MessageService) {}
 
@@ -37,23 +48,38 @@ export class EventDialogComponent implements OnInit {
 
   buildForm() {
     this.eventForm = this.fb.group({
-      title: [this.event?.title, Validators.required],
-      description: [this.event?.description, Validators.required],
-      price: [this.event?.price, Validators.required],
-      company: [this.event?.company, Validators.required],
-      imgEvent: [this.event?.imgEvent, Validators.required]
+      title: ['', Validators.required],
+      description: ['', Validators.required],
+      price: ['', Validators.required],
+      company: ['', Validators.required],
+      imgEvent: ['', Validators.required]
     });
   }
 
-  // Mostrar el diálogo
-  showDialog() {
+  openEditDialog() {
     this.display = true;
+    // Llenar el formulario con los datos del evento
+    this.eventForm.patchValue({
+      title: this.eventOwner.title,
+      description: this.eventOwner.description,
+      price: this.eventOwner.price,
+      company: this.eventOwner.company,
+      imgEvent: this.eventOwner.imgEvent
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const dialogElement = document.getElementById('appEventDialog');
+    if (this.display && dialogElement && !dialogElement.contains(event.target as Node)) {
+      this.display = false;
+    }
   }
 
   // Actualizar evento
   updateEvent() {
     if (this.eventForm.valid) {
-      const updatedEvent = { ...this.event, ...this.eventForm.value };
+      const updatedEvent = { ...this.eventOwner, ...this.eventForm.value };
       this.eventService.updateEvent(updatedEvent).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Evento actualizado exitosamente' });

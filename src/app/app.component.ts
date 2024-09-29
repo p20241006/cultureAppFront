@@ -3,7 +3,7 @@ import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
-import {AsyncPipe, NgClass, NgOptimizedImage} from "@angular/common";
+import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from "@angular/common";
 import {AuthService} from "./auth/auth.service";
 import {initFlowbite} from "flowbite";
 
@@ -18,8 +18,11 @@ import {AvatarModule} from "primeng/avatar";
 import {MatDialog} from "@angular/material/dialog";
 import {OrganizerEventComponent} from "./user/organizer-event/organizer-event.component";
 import {EventService} from "./events/services/event.service";
-import {SearchService} from "./events/services/search.service";
 import {AllEventComponent} from "./events/all-event/all-event.component";
+import {EventModel} from "./events/model/event.model";
+import {catchError} from "rxjs/operators";
+import {BehaviorSubject, Observable, of} from "rxjs";
+import {EventSearchComponent} from "./events/event-search/event-search.component";
 
 
 @Component({
@@ -41,7 +44,9 @@ import {AllEventComponent} from "./events/all-event/all-event.component";
     Button,
     AvatarModule,
     OrganizerEventComponent,
-    AllEventComponent
+    AllEventComponent,
+    NgIf,
+    EventSearchComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -50,12 +55,34 @@ import {AllEventComponent} from "./events/all-event/all-event.component";
 export class AppComponent implements OnInit{
   title = 'cultureAppFront';
   selectedOption: string = 'nada'; // Opción seleccionada por defecto (ciudad en este caso)
-  searchQuery: string = '';
   items: MenuItem[] | undefined;
   authService = inject(AuthService)
   eventService = inject(EventService);
-  searchService = inject(SearchService)
-  @Output() searchEvent = new EventEmitter<string>(); // Emisor de eventos
+
+  searchTerm: string = '';
+  searchActivated: boolean = false;
+  events$: Observable<EventModel[]> = new Observable();
+
+  searchEvents() {
+    if (this.searchTerm.trim()) {
+      this.searchActivated = true;  // Activa el componente de resultados
+
+      // Asigna el observable events$ directamente al resultado del servicio
+      this.events$ = this.eventService.searchEvents(this.searchTerm).pipe(
+        catchError(error => {
+          console.error('Error al buscar eventos:', error);
+          this.searchActivated = false; // Desactiva en caso de error
+          return of([]); // Devuelve un array vacío en caso de error
+        })
+      );
+    } else {
+      this.searchActivated = false; // Si no hay término, desactiva el componente
+    }
+    if (this.searchTerm) {
+      this.router.navigate(['/events/search']);
+     }
+  }
+
 
   readonly dialog = inject(MatDialog);
 
@@ -67,9 +94,6 @@ export class AppComponent implements OnInit{
     });
   }
 
-  onSearch() {
-    this.searchEvent.emit(this.searchQuery); // Emitir el término de búsqueda
-  }
 
   selectOption(option: string) {
     this.selectedOption = option;
@@ -136,5 +160,4 @@ export class AppComponent implements OnInit{
     initFlowbite();
   }
 
-  protected readonly events = module
 }

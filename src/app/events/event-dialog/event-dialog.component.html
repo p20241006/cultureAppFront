@@ -1,37 +1,43 @@
-<p-dialog header="Editar Evento" [(visible)]="display" [modal]="true" [style]="{width: '500px'}" [closable]="false">
-  <form [formGroup]="eventForm">
-    <div class="p-fluid">
-      <div class="p-field">
-        <label for="title">Título</label>
-        <input id="title" pInputText formControlName="title" />
-      </div>
 
-      <div class="p-field">
-        <label for="description">Descripción</label>
-        <textarea id="description" pInputTextarea formControlName="description"></textarea>
-      </div>
 
-      <div class="p-field">
-        <label for="price">Precio</label>
-        <input id="price" pInputText formControlName="price" />
-      </div>
+  <p-dialog header="Editar Evento" [(visible)]="display" [modal]="true" [style]="{width: '500px'}" [closable]="false">
+    @if (eventOwner){
+      <form [formGroup]="eventForm">
+        <div class="p-fluid">
+          <div class="p-field">
+            <label for="title">Título</label>
+            <input id="title" pInputText formControlName="title" />
+          </div>
 
-      <div class="p-field">
-        <label for="company">Compañía</label>
-        <input id="company" pInputText formControlName="company" />
-      </div>
+          <div class="p-field">
+            <label for="description">Descripción</label>
+            <textarea id="description" pInputTextarea formControlName="description"></textarea>
+          </div>
 
-      <div class="p-field">
-        <label for="imgEvent">Imagen del Evento</label>
-        <input id="imgEvent" pInputText formControlName="imgEvent" />
-      </div>
-    </div>
-  </form>
+          <div class="p-field">
+            <label for="price">Precio</label>
+            <input id="price" pInputText formControlName="price" />
+          </div>
 
-  <ng-template pTemplate="footer">
-    <button pButton type="button" label="Actualizar" class="p-button-success" (click)="updateEvent()" [disabled]="eventForm.invalid"></button>
-    <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="display=false"></button>
-  </ng-template>
-</p-dialog>
+          <div class="p-field">
+            <label for="company">Compañía</label>
+            <input id="company" pInputText formControlName="company" />
+          </div>
 
-<p-toast></p-toast>
+          <div class="p-field">
+            <label for="imgEvent">Imagen del Evento</label>
+            <input id="imgEvent" pInputText formControlName="imgEvent" />
+          </div>
+        </div>
+      </form>
+
+
+      <ng-template pTemplate="footer">
+        <button pButton type="button" label="Actualizar" class="p-button-success" (click)="updateEvent()" [disabled]="eventForm.invalid"></button>
+        <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="display=false"></button>
+      </ng-template>
+    }
+  </p-dialog>
+  <p-toast></p-toast>
+
+

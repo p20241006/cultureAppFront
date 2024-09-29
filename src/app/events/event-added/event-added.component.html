@@ -21,7 +21,7 @@
             formControlName="title"
             type="text"
             pInputText
-            class="w-full p-2 border rounded">
+            class="w-full p-2 border-full rounded">
         </div>
         <div>
           <label for="description" class="block text-sm font-medium">Descripción</label>
@@ -115,62 +115,62 @@
 
 @if (eventsOwner$ | async; as events) {
   <div class="event-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    @for (event of events; track event.id) {
-      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow m-2 p-3">
-        <div class="mb-3">
-          <div class="relative mx-auto">
-            <img
-              [src]="event.imgEvent"
-              [alt]="event.title"
-              width="200"
-              height="200"
-              class="w-full border-round"
-            />
-            <p-tag
-              [value]="event.company"
-              [severity]="getSeverity(event.company)"
-              class="absolute"
-              [ngStyle]="{ 'left.px': 5, 'top.px': 5 }"
-            ></p-tag>
+    @for (eventOwner of events; track eventOwner.id) {
+      @defer (on viewport) {
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow m-2 p-3">
+          <div class="mb-3">
+            <div class="relative mx-auto">
+              <img
+                [src]="eventOwner.imgEvent"
+                [alt]="eventOwner.title"
+                width="200"
+                height="200"
+                class="w-full border-round"
+              />
+              <p-tag
+                [value]="eventOwner.company"
+                [severity]="getSeverity(eventOwner.company)"
+                class="absolute"
+                [ngStyle]="{ 'left.px': 5, 'top.px': 5 }"
+              ></p-tag>
+            </div>
           </div>
-        </div>
-        <div class="flex justify-between items-center">
-          <!-- Mostrar las estrellas dinámicamente según el rate -->
-          <div class="mb-3 font-medium">
-            <ng-container *ngFor="let star of getStars(event.rate)">
-              <i class="pi pi-star" [ngStyle]="{'color': star.filled ? 'gold' : 'gray'}"></i>
-            </ng-container>
-          </div>
+          <div class="flex justify-between items-center">
+            <!-- Mostrar las estrellas dinámicamente según el rate -->
+            <div class="mb-3 font-medium">
+              <ng-container *ngFor="let star of getStars(eventOwner.rate)">
+                <i class="pi pi-star" [ngStyle]="{'color': star.filled ? 'gold' : 'gray'}"></i>
+              </ng-container>
+            </div>
 
-          <!-- Botón de corazón que cambia de color al hacer clic -->
-          <span>
+            <!-- Botón de corazón que cambia de color al hacer clic -->
+            <span>
             <button class="p-button-rounded p-button-text like-button"
-                    [ngClass]="{'liked': isEventLiked(event.id)}"
-                    (click)="toggleLike(event.id)">
+                    (click)="toggleFavorite(eventOwner.id)">
               <!-- Corazón no liked (gris) -->
-              <i *ngIf="!isEventLiked(event.id)" class="pi pi-heart"></i>
+              <i *ngIf="!likedEvents[eventOwner.id]" class="pi pi-heart"></i>
               <!-- Corazón liked (rojo) -->
-              <i *ngIf="isEventLiked(event.id)" class="pi pi-heart-fill"></i>
+              <i *ngIf="likedEvents[eventOwner.id]" class="pi pi-heart-fill"></i>
             </button>
           </span>
-        </div>
-        <div class="mb-3 font-medium text-xl">{{ event.title }}</div>
-        <div class="mb-2">
-          <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
-          {{ event.start_date }} - {{ event.end_date }}
-        </div>
-        <div class="flex justify-between items-center">
-          <div class="mt-0 font-semibold text-xl">{{ 'S/' + event.price }}</div>
-        </div>
-        <div class="flex justify-between items-center mt-2">
-          <button [routerLink]="['/events/details', event.id]" mat-flat-button class="bg-green-500">
-            Ver evento
-          </button>
-          <!-- Botón para editar el evento -->
-          <div>
-            <p-button icon="pi pi-pencil" severity="warning" class="ml-2" (click)="onEventClick(event)"></p-button>
-            <p-button icon="pi pi-trash" severity="danger" class="ml-2" (click)="confirmDelete(event.id)"></p-button>
           </div>
+          <div class="mb-3 font-medium text-xl">{{ eventOwner.title }}</div>
+          <div class="mb-2">
+            <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
+            {{ eventOwner.start_date }} - {{ eventOwner.end_date }}
+          </div>
+          <div class="mt-0 font-semibold text-xl">{{ 'S/' + eventOwner.price }}</div>
+          <div class="flex justify-between items-center mt-3">
+            <button [routerLink]="['/events/details', eventOwner.id]" mat-flat-button class="bg-green-500">
+              Ver evento
+            </button>
+            <!-- Botón para editar y eliminar el evento -->
+            <div>
+              <p-button icon="pi pi-pencil" severity="warning" class="ml-2" (click)="onEventClick(eventOwner)"></p-button>
+              <p-button icon="pi pi-trash" severity="danger" class="ml-2" (click)="confirmDelete(eventOwner.id)"></p-button>
+            </div>
+          </div>
+          <app-event-dialog [eventOwner]="eventOwner" #appEventDialog></app-event-dialog>
           <!-- Diálogo de confirmación -->
           <p-dialog header="Confirmación" [(visible)]="display" modal="modal" [closable]="false">
             <p>¿Estás seguro que quieres eliminar este evento?</p>
@@ -181,12 +181,14 @@
           </p-dialog>
           <p-toast></p-toast>
         </div>
-      </div>
+      } @placeholder (){
+        <div>Hola</div>
+      }
     }
   </div>
 }
 
-<app-event-dialog [event]="selectedEvent" #appEventDialog></app-event-dialog>
+
 
 <!-- Paginación de Angular Material -->
 <mat-paginator [length]="totalElements"

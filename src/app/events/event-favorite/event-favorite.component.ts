@@ -29,35 +29,61 @@ import {UiService} from "../../common/ui.service";
   templateUrl: './event-favorite.component.html',
   styleUrl: './event-favorite.component.scss'
 })
-export class EventFavoriteComponent implements OnInit{
+export class EventFavoriteComponent implements OnInit {
 
-  eventsFavorites$: Observable<EventModel[]> = new Observable();
   totalElements: number = 0;       // Total de eventos
-  pageSize: number = 12;            // Tamaño de la página, 6 *cards* por página
+  pageSize: number = 12;            // Tamaño de la página, 12 cards por página
   currentPage: number = 0;         // Página actual
   pageSizeOptions: number[] = [5, 10, 20, 100];  // Opciones de tamaño para la paginación
 
-  uiService= inject(UiService);
-  favoriteEvents$: Observable<EventModel[]>= new Observable();
+  uiService = inject(UiService);
+  favoriteEvents$: Observable<EventModel[]> = new Observable();
+  likedEvents: { [key: number]: boolean } = {}; // Almacena los likes de cada evento por su ID
 
-  constructor(private eventService: EventService, private favoriteService: FavoriteService) {}
+  constructor(private favoriteService: FavoriteService) {}
 
   ngOnInit(): void {
-    // Suscribirse a los cambios en la búsqueda
+    // Cargar los eventos favoritos al inicio
     this.loadEvents(this.currentPage, this.pageSize);
-    this.favoriteEvents$ = this.favoriteService.getFavoriteEvents();
-
   }
 
-
-  // Método para cargar los eventos
+  // Metodo para cargar los eventos
   loadEvents(page: number, size: number) {
-    this.eventsFavorites$ = this.eventService.getAllEvents(page, size).pipe(
-      map((response: EventoResponse) => {
-        this.totalElements = response.totalElements;
-        return response.content;
+    this.favoriteEvents$ = this.favoriteService.getFavoriteEvents().pipe(
+      map(events => {
+        events.forEach(event => {
+          this.loadEventFavorites(event.id); // Cargar el estado favorito de cada evento
+        });
+        this.totalElements = events.length;
+        return events; // Retorna la lista de eventos
       })
     );
+  }
+
+  // Cargar el estado de favorito de un evento
+  loadEventFavorites(eventId: number) {
+    this.favoriteService.statusFavoriteEvent(eventId).subscribe({
+      next: (isFavorite: boolean) => {
+        this.likedEvents[eventId] = isFavorite; // Asignar el estado favorito
+      },
+      error: () => {
+        console.error('Error al cargar el estado de favoritos del evento:', eventId);
+      }
+    });
+  }
+
+  // Alternar el estado de favorito al hacer clic
+  toggleFavorite(eventId: number) {
+    this.favoriteService.toggleFavorite(eventId).subscribe({
+      next: () => {
+        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Cambiar el estado localmente
+        const message = this.likedEvents[eventId] ? 'agregado' : 'removido';
+        this.uiService.showToast(`El evento ha sido ${message} de tus favoritos.`);
+      },
+      error: () => {
+        this.uiService.showToast('Error al cambiar el estado de favorito.');
+      }
+    });
   }
 
   onPageChange(event: any) {
@@ -78,12 +104,6 @@ export class EventFavoriteComponent implements OnInit{
     }
   }
 
-  event = {
-    rate: 0 // Ejemplo de valor de rate
-  };
-
-  isLiked = false;
-
   // Función para devolver un arreglo de estrellas
   getStars(rate: number): { filled: boolean }[] {
     const totalStars = 5; // Total de estrellas a mostrar
@@ -91,32 +111,4 @@ export class EventFavoriteComponent implements OnInit{
       filled: index < rate // Determina si la estrella debe ser dorada o gris
     }));
   }
-  likedEvents: { [key: number]: boolean } = {}; // Almacena los likes de cada evento por su ID
-
-
-  // Verifica si un evento está liked
-  isEventLiked(eventId: number): boolean {
-    return this.likedEvents[eventId];
-  }
-
-  toggleFavorite(eventId: number) {
-    this.favoriteService.toggleFavorite(eventId).subscribe({
-      next: () => {
-        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Invertimos el estado
-        this.saveLikedEvents(); // Guardamos el nuevo estado en localStorage
-        const message = this.likedEvents[eventId] ? 'agregado' : 'removido';
-        this.uiService.showToast(`El evento ha sido ${message} de tus favoritos.`);
-      },
-      error: () => {
-        this.uiService.showToast('Error al cambiar el estado de favorito.');
-      }
-    });
-  }
-
-// Guardar el estado actual de los likes en localStorage
-  saveLikedEvents() {
-    localStorage.setItem('likedEvents', JSON.stringify(this.likedEvents));
-  }
-  display: boolean = false;
-
 }

@@ -59,12 +59,11 @@
           <!-- Botón de corazón que cambia de color al hacer clic -->
           <span>
             <button class="p-button-rounded p-button-text like-button"
-                    [ngClass]="{'liked': isEventLiked(event.id)}"
                     (click)="toggleFavorite(event.id)">
               <!-- Corazón no liked (gris) -->
-              <i *ngIf="!isEventLiked(event.id)" class="pi pi-heart"></i>
+              <i *ngIf="!likedEvents[event.id]" class="pi pi-heart"></i>
               <!-- Corazón liked (rojo) -->
-              <i *ngIf="isEventLiked(event.id)" class="pi pi-heart-fill"></i>
+              <i *ngIf="likedEvents[event.id]" class="pi pi-heart-fill"></i>
             </button>
           </span>
         </div>
@@ -87,8 +86,8 @@
     </ng-template>
   </p-carousel>
 }
-
-@if ( recommendedEvents){
+<!-- EVENTOS RECOMENDADOS POR EL MODELO GNN -->
+@if (eventsRecomendacion$ | async; as recommendedEvents){
   <div>
     <h2 class="mt-3 text-xl font-medium text-gray-900 sm:text-2xl">Eventos Recomendados </h2>
   </div>
@@ -104,20 +103,20 @@
         <div class="mb-3">
           <div class="relative mx-auto">
             <img
-              [ngSrc]="event.imgEvent"
-              [alt]="event.title"
+              [ngSrc]="event.url_img"
+              [alt]="event.titulo"
               width="200"
               height="200"
               class="w-full border-round" />
             <p-tag
-              [value]="event.company"
-              [severity]="getSeverity(event.company)"
+              [value]="event.categoria_id"
+              [severity]="getSeverity(event.categoria_id)"
               class="absolute"
               [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
           </div>
         </div>
         <div class="flex justify-between items-center">
-          <!-- Mostrar las estrellas dinámicamente según el rate -->
+           <!-- Mostrar las estrellas dinámicamente según el rate -->
           <div class="mb-3 font-medium">
             <ng-container *ngFor="let star of getStars(event.rate)">
               <i class="pi pi-star" [ngStyle]="{'color': star.filled ? 'gold' : 'gray'}"></i>
@@ -125,28 +124,26 @@
           </div>
 
           <!-- Botón de corazón que cambia de color al hacer clic -->
-          <!-- Botón de corazón que cambia de color al hacer clic -->
           <span>
             <button class="p-button-rounded p-button-text like-button"
-                    [ngClass]="{'liked': isEventLiked(event.id)}"
                     (click)="toggleFavorite(event.id)">
               <!-- Corazón no liked (gris) -->
-              <i *ngIf="!isEventLiked(event.id)" class="pi pi-heart"></i>
+              <i *ngIf="!likedEvents[event.id]" class="pi pi-heart"></i>
               <!-- Corazón liked (rojo) -->
-              <i *ngIf="isEventLiked(event.id)" class="pi pi-heart-fill"></i>
+              <i *ngIf="likedEvents[event.id]" class="pi pi-heart-fill"></i>
             </button>
           </span>
         </div>
         <div class="mb-3 font-medium">
-          {{ event.title }}
+          {{ event.titulo }}
         </div>
         <div class="mb-2">
           <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
-          {{event.start_date}} - {{event.end_date}}
+          {{event.fecha_inicio}} - {{event.fecha_fin}}
         </div>
         <div class="flex justify-between items-center">
           <div class="mt-0 font-semibold text-xl">
-            {{ 'S/' + event.price }}
+            {{ 'S/' + event.costo }}
           </div>
         </div>
         <div class="flex items-center justify-end mt-2">
@@ -157,8 +154,11 @@
   </p-carousel>
 }
 
+<!-- EVENTOS RECOMENDADOS POR CATEGORIA -->
+
 <app-event-category></app-event-category>
 
+<!-- BOTON QUE TE REDIRIGE A TODOS LOS EVENTOS -->
 <div class="flex justify-center mt-4">
   <button [routerLink]="'/events/pages'" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-lime-800">
     <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">

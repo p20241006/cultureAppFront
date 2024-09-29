@@ -8,6 +8,7 @@ import {EventFavoriteComponent} from "./event-favorite/event-favorite.component"
 import {EventDetailsComponent} from "./event-details/event-details.component";
 import {AllEventComponent} from "./all-event/all-event.component";
 import {EventAddedComponent} from "./event-added/event-added.component";
+import {EventSearchComponent} from "./event-search/event-search.component";
 
 const routes: Routes = [
   {
@@ -21,7 +22,8 @@ const routes: Routes = [
       { path: 'recommendation', component: EventRecomendationComponent },
       { path: 'favorite', component: EventFavoriteComponent },
       { path: 'details/:id', component: EventDetailsComponent, title: 'Details page' },
-      { path: 'pages', component: AllEventComponent}
+      { path: 'pages', component: AllEventComponent},
+      { path: 'search', component: EventSearchComponent}
 
     ],
   },

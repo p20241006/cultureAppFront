@@ -55,7 +55,11 @@ export class AllEventComponent implements OnInit{
     this.events$ = this.eventService.getAllEvents(page, size).pipe(
       map((response: EventoResponse) => {
         this.totalElements = response.totalElements;
-        return response.content;
+        const events = response.content; // Guardar los eventos en una variable
+        events.forEach(event => {
+          this.loadEventFavorites(event.id); // Cargar el estado favorito de cada evento
+        });
+        return events; // Retornar la lista de eventos
       })
     );
     this.filteredEvents$ = this.events$;
@@ -79,10 +83,6 @@ export class AllEventComponent implements OnInit{
     }
   }
 
-  event = {
-    rate: 0 // Ejemplo de valor de rate
-  };
-
 
   // Función para devolver un arreglo de estrellas
   getStars(rate: number): { filled: boolean }[] {
@@ -94,17 +94,23 @@ export class AllEventComponent implements OnInit{
 
   likedEvents: { [key: number]: boolean } = {}; // Almacena los likes de cada evento por su ID
 
-
-  // Verifica si un evento está liked
-  isEventLiked(eventId: number): boolean {
-    return this.likedEvents[eventId];
+// Cargar el estado de favorito de un evento
+  loadEventFavorites(eventId: number) {
+    this.favoriteService.statusFavoriteEvent(eventId).subscribe({
+      next: (isFavorite: boolean) => {
+        this.likedEvents[eventId] = isFavorite; // Asignar el estado favorito
+      },
+      error: () => {
+        console.error('Error al cargar el estado de favoritos del evento:', eventId);
+      }
+    });
   }
 
+  // Alternar el estado de favorito al hacer clic
   toggleFavorite(eventId: number) {
     this.favoriteService.toggleFavorite(eventId).subscribe({
       next: () => {
-        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Invertimos el estado
-        this.saveLikedEvents(); // Guardamos el nuevo estado en localStorage
+        this.likedEvents[eventId] = !this.likedEvents[eventId]; // Cambiar el estado localmente
         const message = this.likedEvents[eventId] ? 'agregado' : 'removido';
         this.uiService.showToast(`El evento ha sido ${message} de tus favoritos.`);
       },
@@ -114,11 +120,24 @@ export class AllEventComponent implements OnInit{
     });
   }
 
-// Guardar el estado actual de los likes en localStorage
-  saveLikedEvents() {
-    localStorage.setItem('likedEvents', JSON.stringify(this.likedEvents));
+  categorias = [
+    { id: 1, name: 'Stand up' },
+    { id: 2, name: 'Donación' },
+    { id: 3, name: 'Música' },
+    { id: 4, name: 'Deporte' },
+    { id: 5, name: 'Danza' },
+    { id: 6, name: 'Tecnología' },
+    { id: 7, name: 'Arte & Cultura' },
+    { id: 8, name: 'Comida & Bebidas' },
+    { id: 9, name: 'Festivales' },
+    { id: 10, name: 'Cine' },
+  ];
+
+// Función para obtener el nombre de la categoría según el ID
+  getCategoryName(idCategoria: number): string {
+    const categoria = this.categorias.find(cat => cat.id === idCategoria);
+    return categoria ? categoria.name : 'Categoría desconocida'; // Devuelve 'Categoría desconocida' si no encuentra la categoría
   }
-  display: boolean = false;
 
 
 }

@@ -1,14 +1,15 @@
 import {inject, Injectable} from '@angular/core';
 import {IUser, User} from "./user";
-import {Observable, throwError} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {CacheService} from "../../common/cache.service";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "../../auth/auth.service";
 import {environment} from "../../../environments/environment";
 import {catchError, map} from "rxjs/operators";
 import {transformError} from "../../common/common";
 import {UserRequest} from "../model/user-request.model";
 import {UserResponse} from "../model/user-response.model";
+import {UiService} from "../../common/ui.service";
 
 
 export interface IUsers {
@@ -31,6 +32,7 @@ export class UserService implements IUserService{
   private readonly cache = inject(CacheService)
   private readonly httpClient = inject(HttpClient)
   private readonly authService = inject(AuthService)
+  private uiService = inject(UiService);
 
   constructor() { }
 
@@ -88,6 +90,29 @@ export class UserService implements IUserService{
 
   register(userData: any): Observable<any> {
     return this.httpClient.post<any>(`http://localhost:8088/api/v1/auth/register`, userData);
+  }
+
+  checkEmail(email: string): Observable<string> {
+    return this.httpClient.get(`${environment.baseUrl}/auth/check-email`, {
+      params: { email },
+      responseType: 'text' // This will treat the response as plain text
+    }).pipe(
+      map(response => {
+        // Handle the string response (e.g., "Email disponible")
+        if (response === 'Email disponible') {
+          return response; // Forward this to the component
+        } else {
+          return ''; // If it's anything else, return empty
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        // Handle any errors, such as a 409 conflict for existing email
+        if (error.status === 409) {
+          this.uiService.showToast('El correo ya está registrado');
+        }
+        return of(''); // Return an empty string if there's an error
+      })
+    );
   }
 
   actualizarUsuario(userId: number, userRequest: UserRequest): Observable<any> {

@@ -16,19 +16,18 @@ export class CategoryService {
 
   private categoriasSeleccionadas: number[] = [];
 
-  // Guardar las categorías seleccionadas
+
   setCategoriasSeleccionadas(categorias: number[]): void {
     this.categoriasSeleccionadas = categorias;
   }
 
-  // Obtener las categorías seleccionadas
   getCategoriasSeleccionadas(): number[] {
     return this.categoriasSeleccionadas;
   }
 
   constructor(public http: HttpClient,  private cacheService: CacheService) { }
 
-  // Método para obtener eventos por categorías seleccionadas
+  // Metodo para obtener eventos por categorías seleccionadas
   getEventosByCategorias(categoriasSeleccionadas: number[]): Observable<EventModel[]> {
     const cachedEventos = this.cacheService.getItem<EventModel[]>(this.cacheKey);
 

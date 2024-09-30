@@ -6,8 +6,8 @@ import {catchError, map, tap} from "rxjs/operators";
 import {EventModel, EventoResponse} from "../model/event.model";
 import {UiService} from "../../common/ui.service";
 import {EventRequestModel} from "../model/EventRequest.model";
-import {RecommendedEvent, RecommendedEventsResponse} from "../model/event-gcn";
-import {EventAdapter} from "../../adapter/EventAdapter";
+import {RecommendedEventsResponse} from "../model/event-gcn";
+
 
 
 @Injectable({

@@ -128,8 +128,8 @@
                 class="w-full border-round"
               />
               <p-tag
-                [value]="eventOwner.company"
-                [severity]="getSeverity(eventOwner.company)"
+                [value]="getCategoryName(eventOwner.categoria_id)"
+                [severity]="getSeverity(getCategoryName(eventOwner.categoria_id))"
                 class="absolute"
                 [ngStyle]="{ 'left.px': 5, 'top.px': 5 }"
               ></p-tag>
@@ -145,14 +145,14 @@
 
             <!-- Botón de corazón que cambia de color al hacer clic -->
             <span>
-            <button class="p-button-rounded p-button-text like-button"
-                    (click)="toggleFavorite(eventOwner.id)">
-              <!-- Corazón no liked (gris) -->
-              <i *ngIf="!likedEvents[eventOwner.id]" class="pi pi-heart"></i>
-              <!-- Corazón liked (rojo) -->
-              <i *ngIf="likedEvents[eventOwner.id]" class="pi pi-heart-fill"></i>
-            </button>
-          </span>
+              <button class="p-button-rounded p-button-text like-button"
+                      (click)="toggleFavorite(eventOwner.id)">
+                <!-- Corazón no liked (gris) -->
+                <i *ngIf="!likedEvents[eventOwner.id]" class="pi pi-heart"></i>
+                <!-- Corazón liked (rojo) -->
+                <i *ngIf="likedEvents[eventOwner.id]" class="pi pi-heart-fill"></i>
+              </button>
+            </span>
           </div>
           <div class="mb-3 font-medium text-xl">{{ eventOwner.title }}</div>
           <div class="mb-2">

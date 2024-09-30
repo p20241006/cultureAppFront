@@ -5,7 +5,7 @@ export interface RecommendedEvent {
   usuario_modificacion: number;
   fecha_modificacion: string;
   archivado: boolean;
-  compañia: string;
+  company: string; // Cambiamos 'compañia' por 'company'
   descripcion: string;
   fecha_fin: string;
   url_img: string;
@@ -17,6 +17,8 @@ export interface RecommendedEvent {
   categoria_id: number;
   owner_id: number;
   region_id: number;
+  isfavorite: boolean;
+  rating: number;
 }
 
 export interface RecommendedEventsResponse {

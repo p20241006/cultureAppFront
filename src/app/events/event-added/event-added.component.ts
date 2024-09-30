@@ -234,13 +234,32 @@ export class EventAddedComponent implements OnInit {
   }
 
   onReject() {
-    this.display = false; // Oculta el diálogo al rechazar
+    this.display = false;
   }
 
   @ViewChild('appEventDialog') eventDialogComponent!: EventDialogComponent;
   onEventClick(eventOwner: EventModel) {
     this.eventDialogComponent.eventOwner = eventOwner;
     this.eventDialogComponent.openEditDialog();
+  }
+
+  categorias1 = [
+    { id: 1, name: 'Stand up' },
+    { id: 2, name: 'Donación' },
+    { id: 3, name: 'Música' },
+    { id: 4, name: 'Deporte' },
+    { id: 5, name: 'Danza' },
+    { id: 6, name: 'Tecnología' },
+    { id: 7, name: 'Arte & Cultura' },
+    { id: 8, name: 'Comida & Bebidas' },
+    { id: 9, name: 'Festivales' },
+    { id: 10, name: 'Cine' },
+  ];
+
+// Función para obtener el nombre de la categoría según el ID
+  getCategoryName(idCategoria: number): string {
+    const categoria = this.categorias1.find(cat => cat.id === idCategoria);
+    return categoria ? categoria.name : 'Categoría desconocida'; // Devuelve 'Categoría desconocida' si no encuentra la categoría
   }
 
 

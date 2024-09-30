@@ -45,8 +45,6 @@ export class EventRecomendationComponent implements OnInit {
   uiService =  inject(UiService);
   favoriteService = inject(FavoriteService);
 
-
-
   responsiveOptions: any[] | undefined;
   error: string | null = null;
 
@@ -161,6 +159,25 @@ export class EventRecomendationComponent implements OnInit {
         this.uiService.showToast('Error al cambiar el estado de favorito.');
       }
     });
+  }
+
+  categorias = [
+    { id: 1, name: 'Stand up' },
+    { id: 2, name: 'Donación' },
+    { id: 3, name: 'Música' },
+    { id: 4, name: 'Deporte' },
+    { id: 5, name: 'Danza' },
+    { id: 6, name: 'Tecnología' },
+    { id: 7, name: 'Arte & Cultura' },
+    { id: 8, name: 'Comida & Bebidas' },
+    { id: 9, name: 'Festivales' },
+    { id: 10, name: 'Cine' },
+  ];
+
+// Función para obtener el nombre de la categoría según el ID
+  getCategoryName(idCategoria: number): string {
+    const categoria = this.categorias.find(cat => cat.id === idCategoria);
+    return categoria ? categoria.name : 'Categoría desconocida'; // Devuelve 'Categoría desconocida' si no encuentra la categoría
   }
 
 }

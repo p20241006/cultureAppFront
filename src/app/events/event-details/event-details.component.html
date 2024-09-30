@@ -45,7 +45,7 @@
                 Dar Puntuación
               </button>
               <div class="card flex justify-content-center">
-                <p-dialog header="Calificacion" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+                <p-dialog header="Calificación" [modal]="true" [(visible)]="visible" [style]="{ width: '15rem', height: '15rem' }">
                   <p-rating [(ngModel)]="value" stars="5">
                     <ng-template pTemplate="cancelicon">
                       <img
@@ -67,9 +67,9 @@
                     </ng-template>
                   </p-rating>
 
-                  <div class="flex justify-content-end gap-4">
-                    <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
-                    <p-button label="Save" (onClick)="visible = false;guardarPuntuacion()" />
+                  <div class="flex justify-content-end gap-4 pt-12">
+                    <button mat-button color="accent" (click)="visible = false">Cancel</button>
+                    <button mat-raised-button color="primary" (click)="visible = false; guardarPuntuacion()">Save</button>
                   </div>
                 </p-dialog>
               </div>

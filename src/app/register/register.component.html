@@ -81,11 +81,25 @@
             <span class="mt-2 hidden text-sm text-red-500 peer-invalid:peer-focus:block">Debes seleccionar un género</span>
           </div>
           <div class="sm:col-span-2">
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-            <input type="email" formControlName="email" id="email"  required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Correo electrónico"
-                   class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary-60 focus:border-secondary-50 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500">
-            <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">Por favor, ingrese un email valido</span>
-            </label>
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <input
+              type="email"
+              formControlName="email"
+              id="email"
+              required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              placeholder="Correo electrónico"
+              (blur)="checkEmail()"
+              class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary-60 focus:border-secondary-50 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
+            >
+            <!-- Display validation error if email is invalid -->
+            <span *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="mt-2 text-sm text-red-500">
+                Por favor, ingrese un email válido
+            </span>
+            <!-- Display backend error if the email is not available -->
+            <span *ngIf="emailErrorMessage" class="mt-2 text-sm text-red-500">
+            {{ emailErrorMessage }}
+            </span>
           </div>
           <div class="sm:col-span-2">
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña

@@ -12,8 +12,8 @@
               class="w-full border-round"
             />
             <p-tag
-              [value]="event.company"
-              [severity]="getSeverity(event.company)"
+              [value]="getCategoryName(event.categoria_id)"
+              [severity]="getSeverity(getCategoryName(event.categoria_id))"
               class="absolute"
               [ngStyle]="{ 'left.px': 5, 'top.px': 5 }"
             ></p-tag>

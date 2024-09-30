@@ -8,7 +8,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {CategoryService} from "../events/event-category/category.service";
 import {UiService} from "../common/ui.service";
-import {NgClass, NgForOf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FieldErrorDirective} from "../user-controls/field-error.directive";
 
 @Component({
@@ -24,7 +24,8 @@ import {FieldErrorDirective} from "../user-controls/field-error.directive";
     FieldErrorDirective,
     FormsModule,
     NgForOf,
-    NgClass
+    NgClass,
+    NgIf
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -34,6 +35,8 @@ export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup;
   categoriasSeleccionadas: number[] = [];
+  emailErrorMessage: string = '';
+
 
   categorias = [
     { id: 1, name: 'Stand up' },
@@ -85,15 +88,28 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
 
   }
+
+  checkEmail(): void {
+    const email = this.registerForm.get('email')?.value;
+    this.userService.checkEmail(email).subscribe((response) => {
+      if (response === 'Email disponible') {
+        this.emailErrorMessage = ''; // No error, email is available
+        this.uiService.showToast('El email está disponible'); // Optionally show a success toast
+      } else {
+        this.emailErrorMessage = 'El correo ya está registrado o ocurrió un error'; // Show error message
+      }
+    });
+  }
+
   onSubmit(): void {
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid && !this.emailErrorMessage) {
       this.userService.register(this.registerForm.value).subscribe({
         next: () => {
-          this.uiService.showDialog('Registro exitoso',"Usted se ah registrado correctamente");
-          this.router.navigate(['/login']); // Redirige al login
+          this.uiService.showDialog('Registro exitoso', 'Usted se ha registrado correctamente');
+          this.router.navigate(['/login']); // Redirect to login
         },
         error: (error) => {
-          alert('Error al registrar: '+ error);
+          this.uiService.showToast('Error al registrar');
         }
       });
     }

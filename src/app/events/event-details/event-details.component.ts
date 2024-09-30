@@ -10,6 +10,8 @@ import {DialogModule} from "primeng/dialog";
 import {RatingModule} from "primeng/rating";
 import {AsyncPipe} from "@angular/common";
 import {DockModule} from "primeng/dock";
+import {UiService} from "../../common/ui.service";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @Component({
@@ -23,7 +25,8 @@ import {DockModule} from "primeng/dock";
     RatingModule,
     AsyncPipe,
     RouterLink,
-    DockModule
+    DockModule,
+    MatButtonModule
   ],
   styleUrls: ['./event-details.component.scss']
 })
@@ -31,11 +34,12 @@ export class EventDetailsComponent implements OnInit {
 
   route = inject(ActivatedRoute);
   eventService = inject(EventService);
-  ratingService = inject(RatingService); // Inyecta el servicio de Rating
+  ratingService = inject(RatingService);
+  uiService = inject(UiService);
   eventDetail$: Observable<EventModel> = new Observable();
   idEvento: number = 0;
-  value!: number; // Valor del rating (puntuación)
-  visible: boolean = false; // Control de visibilidad del diálogo
+  value!: number;
+  visible: boolean = false;
 
   constructor() {}
 
@@ -54,14 +58,13 @@ export class EventDetailsComponent implements OnInit {
   // Enviar la puntuación al servicio
   guardarPuntuacion(): void {
     if (this.value) {
-      // Llamar al servicio para enviar la puntuación y el comentario
       this.ratingService.enviarPuntuacion(this.idEvento, this.value).subscribe({
         next: (response) => {
-          console.log('Puntuación enviada con éxito', response);
-          this.visible = false; // Cerrar el diálogo después de guardar
+          this.uiService.showToast('Puntuación enviada con éxito', response);
+          this.visible = false;
         },
         error: (error) => {
-          console.error('Error al enviar la puntuación', error);
+          this.uiService.showToast('Error al enviar la puntuación', error);
         }
       });
     }

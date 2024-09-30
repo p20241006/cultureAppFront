@@ -123,19 +123,12 @@
   }
 }
 
-<div *ngIf="searchActivated">
-  <app-event-search [events$]="events$"></app-event-search>
-</div>
-
-
 <ngx-ui-loader
   bgsColor = "#ffcc48"
   text="Espere un momento ..."
   pbColor = "#b12b67"
   fgsType="square-jelly-box"
 ></ngx-ui-loader>
-
-
 
 <router-outlet></router-outlet>
 

@@ -20,6 +20,76 @@
     </p-galleria>
 }
 
+<!-- EVENTOS RECOMENDADOS POR EL MODELO GNN -->
+@if (eventsRecomendacion$ | async; as recommendedEvents){
+  <div>
+    <h2 class="mt-3 text-xl font-medium text-gray-900 sm:text-2xl">Eventos Recomendados </h2>
+  </div>
+  <p-carousel
+    [value]="recommendedEvents"
+    [numVisible]="4"
+    [numScroll]="3"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+    autoplayInterval="3000">
+    <ng-template let-event pTemplate="item">
+      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow m-2 p-3">
+        <div class="mb-3">
+          <div class="relative mx-auto">
+            <img
+              [ngSrc]="event.url_img"
+              [alt]="event.titulo"
+              width="200"
+              height="200"
+              class="w-full border-round" />
+            <p-tag
+              [value]="getCategoryName(event.categoria_id)"
+              [severity]="getSeverity(getCategoryName(event.categoria_id))"
+              class="absolute"
+              [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+          </div>
+        </div>
+        <div class="flex justify-between items-center">
+          <!-- Mostrar las estrellas dinámicamente según el rate -->
+          <div class="mb-3 font-medium">
+            <ng-container *ngFor="let star of getStars(event.rating)">
+              <i class="pi pi-star" [ngStyle]="{'color': star.filled ? 'gold' : 'gray'}"></i>
+            </ng-container>
+          </div>
+
+          <!-- Botón de corazón que cambia de color al hacer clic -->
+          <span>
+            <button class="p-button-rounded p-button-text like-button"
+                    (click)="toggleFavorite(event.id)">
+              <!-- Corazón no liked (gris) -->
+              <i *ngIf="!likedEvents[event.id]" class="pi pi-heart"></i>
+              <!-- Corazón liked (rojo) -->
+              <i *ngIf="likedEvents[event.id]" class="pi pi-heart-fill"></i>
+            </button>
+          </span>
+        </div>
+        <div class="mb-3 font-medium">
+          {{ event.titulo }}
+        </div>
+        <div class="mb-2">
+          <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
+          {{event.fecha_inicio}} - {{event.fecha_fin}}
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="mt-0 font-semibold text-xl">
+            {{ 'S/' + event.costo }}
+          </div>
+        </div>
+        <div class="flex items-center justify-end mt-2">
+          <button [routerLink]="['/events/details', event.id]"  mat-flat-button class="bg-green-500">Ver evento</button>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+}
+
+<!-- EVENTOS RECOMENDADOS POR FECHAS PROXIMAS -->
+
 @if ( eventsCards$ | async; as cardEvent){
   <div>
     <h2 class="mt-3 text-xl font-medium text-gray-900 sm:text-2xl">Eventos Proximos</h2>
@@ -42,8 +112,8 @@
               height="200"
               class="w-full border-round" />
             <p-tag
-              [value]="event.company"
-              [severity]="getSeverity(event.company)"
+              [value]="getCategoryName(event.categoria_id)"
+              [severity]="getSeverity(getCategoryName(event.categoria_id))"
               class="absolute"
               [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
           </div>
@@ -86,73 +156,7 @@
     </ng-template>
   </p-carousel>
 }
-<!-- EVENTOS RECOMENDADOS POR EL MODELO GNN -->
-@if (eventsRecomendacion$ | async; as recommendedEvents){
-  <div>
-    <h2 class="mt-3 text-xl font-medium text-gray-900 sm:text-2xl">Eventos Recomendados </h2>
-  </div>
-  <p-carousel
-    [value]="recommendedEvents"
-    [numVisible]="4"
-    [numScroll]="3"
-    [circular]="true"
-    [responsiveOptions]="responsiveOptions"
-    autoplayInterval="3000">
-    <ng-template let-event pTemplate="item">
-      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow m-2 p-3">
-        <div class="mb-3">
-          <div class="relative mx-auto">
-            <img
-              [ngSrc]="event.url_img"
-              [alt]="event.titulo"
-              width="200"
-              height="200"
-              class="w-full border-round" />
-            <p-tag
-              [value]="event.categoria_id"
-              [severity]="getSeverity(event.categoria_id)"
-              class="absolute"
-              [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
-          </div>
-        </div>
-        <div class="flex justify-between items-center">
-           <!-- Mostrar las estrellas dinámicamente según el rate -->
-          <div class="mb-3 font-medium">
-            <ng-container *ngFor="let star of getStars(event.rate)">
-              <i class="pi pi-star" [ngStyle]="{'color': star.filled ? 'gold' : 'gray'}"></i>
-            </ng-container>
-          </div>
 
-          <!-- Botón de corazón que cambia de color al hacer clic -->
-          <span>
-            <button class="p-button-rounded p-button-text like-button"
-                    (click)="toggleFavorite(event.id)">
-              <!-- Corazón no liked (gris) -->
-              <i *ngIf="!likedEvents[event.id]" class="pi pi-heart"></i>
-              <!-- Corazón liked (rojo) -->
-              <i *ngIf="likedEvents[event.id]" class="pi pi-heart-fill"></i>
-            </button>
-          </span>
-        </div>
-        <div class="mb-3 font-medium">
-          {{ event.titulo }}
-        </div>
-        <div class="mb-2">
-          <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
-          {{event.fecha_inicio}} - {{event.fecha_fin}}
-        </div>
-        <div class="flex justify-between items-center">
-          <div class="mt-0 font-semibold text-xl">
-            {{ 'S/' + event.costo }}
-          </div>
-        </div>
-        <div class="flex items-center justify-end mt-2">
-          <button [routerLink]="['/events/details', event.id]"  mat-flat-button class="bg-green-500">Ver evento</button>
-        </div>
-      </div>
-    </ng-template>
-  </p-carousel>
-}
 
 <!-- EVENTOS RECOMENDADOS POR CATEGORIA -->
 

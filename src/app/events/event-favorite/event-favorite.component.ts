@@ -5,12 +5,13 @@ import {EventService} from "../services/event.service";
 import {SearchService} from "../services/search.service";
 import {map, startWith} from "rxjs/operators";
 import {AsyncPipe, NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatButtonModule} from "@angular/material/button";
 import {MatPaginator} from "@angular/material/paginator";
 import {TagModule} from "primeng/tag";
 import {RouterLink} from "@angular/router";
 import {FavoriteService} from "../services/favorite.service";
 import {UiService} from "../../common/ui.service";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
   selector: 'app-event-favorite',
@@ -24,7 +25,9 @@ import {UiService} from "../../common/ui.service";
     TagModule,
     NgStyle,
     RouterLink,
-    NgClass
+    NgClass,
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './event-favorite.component.html',
   styleUrl: './event-favorite.component.scss'
@@ -111,4 +114,24 @@ export class EventFavoriteComponent implements OnInit {
       filled: index < rate // Determina si la estrella debe ser dorada o gris
     }));
   }
+
+  categorias = [
+    { id: 1, name: 'Stand up' },
+    { id: 2, name: 'Donación' },
+    { id: 3, name: 'Música' },
+    { id: 4, name: 'Deporte' },
+    { id: 5, name: 'Danza' },
+    { id: 6, name: 'Tecnología' },
+    { id: 7, name: 'Arte & Cultura' },
+    { id: 8, name: 'Comida & Bebidas' },
+    { id: 9, name: 'Festivales' },
+    { id: 10, name: 'Cine' },
+  ];
+
+// Función para obtener el nombre de la categoría según el ID
+  getCategoryName(idCategoria: number): string {
+    const categoria = this.categorias.find(cat => cat.id === idCategoria);
+    return categoria ? categoria.name : 'Categoría desconocida'; // Devuelve 'Categoría desconocida' si no encuentra la categoría
+  }
+
 }

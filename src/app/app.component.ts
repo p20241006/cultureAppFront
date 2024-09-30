@@ -23,6 +23,7 @@ import {EventModel} from "./events/model/event.model";
 import {catchError} from "rxjs/operators";
 import {BehaviorSubject, Observable, of} from "rxjs";
 import {EventSearchComponent} from "./events/event-search/event-search.component";
+import {SearchService} from "./events/services/search.service";
 
 
 @Component({
@@ -57,32 +58,14 @@ export class AppComponent implements OnInit{
   selectedOption: string = 'nada'; // Opción seleccionada por defecto (ciudad en este caso)
   items: MenuItem[] | undefined;
   authService = inject(AuthService)
-  eventService = inject(EventService);
+  searchService =inject(SearchService);
 
   searchTerm: string = '';
-  searchActivated: boolean = false;
-  events$: Observable<EventModel[]> = new Observable();
 
   searchEvents() {
-    if (this.searchTerm.trim()) {
-      this.searchActivated = true;  // Activa el componente de resultados
-
-      // Asigna el observable events$ directamente al resultado del servicio
-      this.events$ = this.eventService.searchEvents(this.searchTerm).pipe(
-        catchError(error => {
-          console.error('Error al buscar eventos:', error);
-          this.searchActivated = false; // Desactiva en caso de error
-          return of([]); // Devuelve un array vacío en caso de error
-        })
-      );
-    } else {
-      this.searchActivated = false; // Si no hay término, desactiva el componente
-    }
-    if (this.searchTerm) {
-      this.router.navigate(['/events/search']);
-     }
+    this.searchService.setSearchTerm(this.searchTerm);
+    this.router.navigate(['/events/search'], { queryParams: { q: this.searchTerm } });
   }
-
 
   readonly dialog = inject(MatDialog);
 

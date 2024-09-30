@@ -108,6 +108,7 @@ export class EventAddedComponent implements OnInit {
       categoryId: [null, Validators.required],
       regionId: [null, Validators.required],
       company: ['', Validators.required],
+      urlEvent: ['', Validators.required]
     });
   }
 
@@ -127,7 +128,7 @@ export class EventAddedComponent implements OnInit {
           });
           this.eventoForm.reset();
           this.mostrarFormulario = false; // Ocultar el formulario después de agregar el evento
-          this.loadEvents(this.currentPage, this.pageSize); // Recargar los eventos para mostrar el nuevo evento
+          this.uiService.showToast("El evento a sido agregado exitosamente");
         },
         (error) => {
           this.messageService.add({

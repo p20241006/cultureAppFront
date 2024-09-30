@@ -8,4 +8,7 @@ export interface EventRequestModel {
   imgEvent: string;
   shareable: boolean;
   company: string;
+  urlEvent: string;
+  categoryId: number;
+  regionId: number;
 }

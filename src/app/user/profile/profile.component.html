@@ -16,8 +16,8 @@
       <span>Celular: {{userMe.currentUser$.value.phone}}</span>
     </p>
     <p class="flex items-center mb-2">
-      <i class="pi pi-map-marker mr-2" style="color: var(--primary-color);"></i>
-      <span>{{userMe.currentUser$.value.role}}</span>
+      <i class="pi pi-user mr-2" style="color: var(--primary-color);"></i>
+      <span>Rol: {{userMe.currentUser$.value.role}}</span>
     </p>
   </div>
 
@@ -25,5 +25,8 @@
     pButton
     label="Editar Perfil"
     icon="pi pi-pencil"
-    class="w-full bg-teal-500 text-white hover:bg-teal-600 transition duration-200"></button>
+    class="w-full bg-teal-500 text-white hover:bg-teal-600 transition duration-200"
+    pTooltip="No disponible por el momento"
+    tooltipPosition="top">
+  </button>
 </div>

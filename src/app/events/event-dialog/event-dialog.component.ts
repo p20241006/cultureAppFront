@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostListener,
+  HostListener, inject,
   Input,
   input,
   OnInit,
@@ -17,6 +17,8 @@ import {EventModel} from "../model/event.model";
 import {ChipsModule} from "primeng/chips";
 import {ButtonModule} from "primeng/button";
 import {InputTextareaModule} from "primeng/inputtextarea";
+import {DropdownModule} from "primeng/dropdown";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -28,7 +30,8 @@ import {InputTextareaModule} from "primeng/inputtextarea";
     ToastModule,
     ChipsModule,
     ButtonModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DropdownModule
   ],
   templateUrl: './event-dialog.component.html',
   styleUrl: './event-dialog.component.scss',
@@ -50,9 +53,15 @@ export class EventDialogComponent implements OnInit {
     this.eventForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      price: ['', Validators.required],
+      start_date: ['', Validators.required],
+      end_date: ['', Validators.required],
+      price: [0, Validators.required],
+      imgEvent: ['', Validators.required],
+      shareable: [true],
+      categoryId: [null, Validators.required],
+      regionId: [null, Validators.required],
       company: ['', Validators.required],
-      imgEvent: ['', Validators.required]
+      urlEvent: ['', Validators.required]
     });
   }
 
@@ -62,9 +71,14 @@ export class EventDialogComponent implements OnInit {
     this.eventForm.patchValue({
       title: this.eventOwner.title,
       description: this.eventOwner.description,
+      start_date: this.eventOwner.start_date,
+      end_date: this.eventOwner.end_date,
       price: this.eventOwner.price,
       company: this.eventOwner.company,
-      imgEvent: this.eventOwner.imgEvent
+      imgEvent: this.eventOwner.imgEvent,
+      categoryId: this.eventOwner.categoria_id,
+      regionId: this.eventOwner.region_id,
+      urlEvent: this.eventOwner.urlEvent,
     });
   }
 
@@ -91,4 +105,25 @@ export class EventDialogComponent implements OnInit {
       });
     }
   }
+
+  regiones = [
+    { id: 1, nombre: 'LIMA' },
+    { id: 2, nombre: 'CUSCO' },
+  ];
+
+  categorias = [
+    { id: 1, nombre: 'Conciertos' },
+    { id: 2, nombre: 'Ferias' },
+    { id: 3, nombre: 'Museos' },
+    { id: 4, nombre: 'Turismo' },
+    { id: 5, nombre: 'Cine' },
+    { id: 6, nombre: 'Talleres' },
+    { id: 7, nombre: 'Teatro' },
+    { id: 8, nombre: 'Festivales' },
+    { id: 9, nombre: 'Deportes' },
+    { id: 10, nombre: 'Arte y Cultura' },
+    { id: 11, nombre: 'Seminarios y Conferencias' },
+    { id: 12, nombre: 'Eventos Familiares' },
+    { id: 13, nombre: 'Otros' },
+  ];
 }

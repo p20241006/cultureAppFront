@@ -24,6 +24,7 @@ import {CustomAuthService} from "../../auth/auth.custom.service";
 import {AuthService} from "../../auth/auth.service";
 import {Observable} from "rxjs";
 import {ButtonDirective} from "primeng/button";
+import {DockModule} from "primeng/dock";
 
 
 @Component({
@@ -47,6 +48,7 @@ import {ButtonDirective} from "primeng/button";
     MatSelectModule,
     AsyncPipe,
     ButtonDirective,
+    DockModule,
 
   ],
 })

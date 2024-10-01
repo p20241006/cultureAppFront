@@ -34,8 +34,10 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/styles.css",
 
+              "src/_redirects",
+
+              "src/styles.css",
               "src/assets",
               "src/assets/img/chilli",
               "src/assets/img/chilli/favicon.ico",

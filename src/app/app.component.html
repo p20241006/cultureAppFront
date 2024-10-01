@@ -9,7 +9,9 @@
       <!-- Logo -->
       <div class="flex items-center space-x-2">
         <img src="../assets/img/chilli/favicon-32x32.png" alt="Culture App Logo" class="h-8">
+        <a [routerLink]="'/events'">
         <span class="text-2xl text-white font-bold hidden sm:inline">Culture App</span>
+        </a>
       </div>
 
       <!-- Search Bar -->
@@ -21,7 +23,7 @@
           placeholder="Buscar eventos"
           class="w-full p-3 pl-12 pr-5 rounded-full bg-gray-800 text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
         />
-        <span class="absolute left-3 flex items-center text-white" (click)="searchEvents()">
+        <span  class="absolute left-3 flex items-center text-white" (click)="searchEvents()">
           <i class="pi pi-search"></i>
         </span>
       </div>

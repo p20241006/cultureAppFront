@@ -54,7 +54,7 @@ export class EventRecomendationComponent implements OnInit {
   ngOnInit(): void {
     let id = this.authService.currentUser$.value.id;
     this.fetchEventos();
-    this.loadRecommendedEvents(3);
+    this.loadRecommendedEvents(id);
 
     initFlowbite();
 

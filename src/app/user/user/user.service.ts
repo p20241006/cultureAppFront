@@ -124,7 +124,7 @@ export class UserService implements IUserService{
     });
   }
 
-  // Método para obtener los eventos con paginación
+  // Metodo para obtener los eventos con paginación
   getAllSolicitudRol(): Promise<UserResponse[]> {
     // @ts-ignore
     return this.httpClient.get<UserResponse[]>(`${environment.baseUrl}/users/envio-formulario`).toPromise();

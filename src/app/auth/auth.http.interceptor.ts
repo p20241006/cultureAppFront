@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators'
 
 import { UiService } from '../common/ui.service'
 import { AuthService } from './auth.service'
-import {environment} from "../../environments/environment.prod";
+import {environment} from "../../environments/environment";
 import {NgxUiLoaderService} from "ngx-ui-loader";
 // loader
 var  _activeRequest = 0;
@@ -16,7 +16,6 @@ export function AuthHttpInterceptor(req: HttpRequest<unknown>, next: HttpHandler
   const router = inject(Router)
   const uiService = inject(UiService)
   const _ngxUiLoaderService = inject(NgxUiLoaderService)
-
 
 
   function _stopLoader(){

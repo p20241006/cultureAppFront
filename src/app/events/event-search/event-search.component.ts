@@ -1,10 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, Input, OnInit, Signal} from '@angular/core';
+import { Component, inject, OnInit} from '@angular/core';
 import {EventModel} from "../model/event.model";
 import {Observable, of, switchMap} from "rxjs";
 import {AsyncPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {catchError, map} from "rxjs/operators";
 import {EventService} from "../services/event.service";
-import {SearchService} from "../services/search.service";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {Button, ButtonDirective} from "primeng/button";
 import {CarouselModule} from "primeng/carousel";
@@ -35,7 +34,6 @@ import {MatIconModule} from "@angular/material/icon";
   ],
   templateUrl: './event-search.component.html',
   styleUrl: './event-search.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventSearchComponent implements OnInit{
 
@@ -117,5 +115,27 @@ export class EventSearchComponent implements OnInit{
     return Array.from({ length: totalStars }, (_, index) => ({
       filled: index < rate // Determina si la estrella debe ser dorada o gris
     }));
+  }
+
+  categorias = [
+    { id: 1, name: 'Conciertos' },
+    { id: 2, name: 'Ferias' },
+    { id: 3, name: 'Museos' },
+    { id: 4, name: 'Turismo' },
+    { id: 5, name: 'Cine' },
+    { id: 6, name: 'Talleres' },
+    { id: 7, name: 'Teatro' },
+    { id: 8, name: 'Festivales' },
+    { id: 9, name: 'Deportes' },
+    { id: 10, name: 'Arte y Cultura' },
+    { id: 11, name: 'Seminarios y Conferencias' },
+    { id: 12, name: 'Eventos Familiares' },
+    { id: 13, name: 'Deportes' },
+  ];
+
+// Función para obtener el nombre de la categoría según el ID
+  getCategoryName(idCategoria: number): string {
+    const categoria = this.categorias.find(cat => cat.id === idCategoria);
+    return categoria ? categoria.name : 'Categoría desconocida'; // Devuelve 'Categoría desconocida' si no encuentra la categoría
   }
 }

@@ -85,7 +85,7 @@ export class EventDetailsComponent implements OnInit {
       { id: 10, nombre: "Arte y Cultura" },
       { id: 11, nombre: "Seminarios y Conferencias" },
       { id: 12, nombre: "Eventos Familiares" },
-      { id: 94, nombre: "Otros" },
+      { id: 13, nombre: "Otros" },
     ];
 
     // Buscar la categoría por id

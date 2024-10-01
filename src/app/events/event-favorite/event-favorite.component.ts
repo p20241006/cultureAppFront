@@ -116,16 +116,19 @@ export class EventFavoriteComponent implements OnInit {
   }
 
   categorias = [
-    { id: 1, name: 'Stand up' },
-    { id: 2, name: 'Donación' },
-    { id: 3, name: 'Música' },
-    { id: 4, name: 'Deporte' },
-    { id: 5, name: 'Danza' },
-    { id: 6, name: 'Tecnología' },
-    { id: 7, name: 'Arte & Cultura' },
-    { id: 8, name: 'Comida & Bebidas' },
-    { id: 9, name: 'Festivales' },
-    { id: 10, name: 'Cine' },
+    { id: 1, name: 'Conciertos' },
+    { id: 2, name: 'Ferias' },
+    { id: 3, name: 'Museos' },
+    { id: 4, name: 'Turismo' },
+    { id: 5, name: 'Cine' },
+    { id: 6, name: 'Talleres' },
+    { id: 7, name: 'Teatro' },
+    { id: 8, name: 'Festivales' },
+    { id: 9, name: 'Deportes' },
+    { id: 10, name: 'Arte y Cultura' },
+    { id: 11, name: 'Seminarios y Conferencias' },
+    { id: 12, name: 'Eventos Familiares' },
+    { id: 13, name: 'Deportes' },
   ];
 
 // Función para obtener el nombre de la categoría según el ID

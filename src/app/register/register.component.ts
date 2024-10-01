@@ -6,7 +6,7 @@ import {UserService} from "../user/user/user.service";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
-import {CategoryService} from "../events/event-category/category.service";
+import {CategoryService} from "../events/services/category.service";
 import {UiService} from "../common/ui.service";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FieldErrorDirective} from "../user-controls/field-error.directive";

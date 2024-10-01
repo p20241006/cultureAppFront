@@ -89,7 +89,7 @@ export class UserService implements IUserService{
 
 
   register(userData: any): Observable<any> {
-    return this.httpClient.post<any>(`http://localhost:8088/api/v1/auth/register`, userData);
+    return this.httpClient.post<any>(`${environment.baseUrl}/auth/register`, userData);
   }
 
   checkEmail(email: string): Observable<string> {

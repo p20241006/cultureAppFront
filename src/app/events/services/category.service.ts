@@ -4,6 +4,7 @@ import {Observable, of} from "rxjs";
 import {EventModel} from "../model/event.model";
 import {CacheService} from "../../common/cache.service";
 import {tap} from "rxjs/operators";
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -11,7 +12,7 @@ import {tap} from "rxjs/operators";
 })
 export class CategoryService {
 
-  private apiUrl = 'http://localhost:8088/api/v1/'; // URL del backend
+  private apiUrl = environment.baseUrl // URL del backend
   private cacheKey = 'EventosCategoria';
 
   private categoriasSeleccionadas: number[] = [];
@@ -35,7 +36,7 @@ export class CategoryService {
       return of(cachedEventos); // Retorna los eventos desde el caché
     } else {
       const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-      return this.http.post<EventModel[]>(`${this.apiUrl}category/by-categories`, categoriasSeleccionadas, { headers })
+      return this.http.post<EventModel[]>(`${this.apiUrl}/category/by-categories`, categoriasSeleccionadas, { headers })
         .pipe(
           tap(eventos => {
             this.cacheService.setItem(this.cacheKey, eventos);

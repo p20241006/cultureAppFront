@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit, signal} from '@angular/core';
-import {CategoryService} from "./category.service";
+import {CategoryService} from "../services/category.service";
 import {EventModel} from "../model/event.model";
 import {AsyncPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Button} from "primeng/button";

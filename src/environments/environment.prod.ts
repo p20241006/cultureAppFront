@@ -2,7 +2,7 @@ import { AuthMode } from '../app/auth/auth.enum'
 
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:8088/api/v1',
+  baseUrl: 'https://culture-app-api-btcfhmhsacfaardx.canadacentral-01.azurewebsites.net/api/v1',
   authMode: AuthMode.CustomServer,
 
   firebase: {

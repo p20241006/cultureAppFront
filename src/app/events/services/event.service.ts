@@ -2,11 +2,12 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams,} from "@angular/common/http";
 import { Observable, of} from "rxjs";
 import {CacheService} from "../../common/cache.service";
-import {catchError, map, tap} from "rxjs/operators";
+import {catchError, tap} from "rxjs/operators";
 import {EventModel, EventoResponse} from "../model/event.model";
 import {UiService} from "../../common/ui.service";
 import {EventRequestModel} from "../model/EventRequest.model";
 import {RecommendedEventsResponse} from "../model/event-gcn";
+import {environment} from "../../../environments/environment";
 
 
 
@@ -15,7 +16,7 @@ import {RecommendedEventsResponse} from "../model/event-gcn";
 })
 export class EventService {
 
-  private apiUrl = 'http://localhost:8088/api/v1/';
+  private apiUrl = environment.baseUrl;
   private cacheKey = 'proximosEventos';
   uiService = inject(UiService)
 
@@ -27,7 +28,7 @@ export class EventService {
       return of(cachedEventos); // Retorna los eventos desde el caché
     } else {
       // Si no hay eventos en caché, solicita desde la API
-      return this.http.get<EventModel[]>(`${this.apiUrl}events/proximos`).pipe(
+      return this.http.get<EventModel[]>(`${this.apiUrl}/events/proximos`).pipe(
         tap(eventos => {
           this.cacheService.setItem(this.cacheKey, eventos);
         })
@@ -36,21 +37,21 @@ export class EventService {
   }
 
   getEventById(eventId: number): Observable<EventModel> {
-    return this.http.get<EventModel>(`${this.apiUrl}events/${eventId}`);
+    return this.http.get<EventModel>(`${this.apiUrl}/events/${eventId}`);
   }
 
   // Metodo para obtener los eventos con paginación
   getAllEvents(page: number, size: number): Observable<EventoResponse> {
-    return this.http.get<EventoResponse>(`${this.apiUrl}events?page=${page}&size=${size}`);
+    return this.http.get<EventoResponse>(`${this.apiUrl}/events?page=${page}&size=${size}`);
   }
 
   // Metodo para obtener los eventos con paginación
   getAllEventsOwner(page: number, size: number): Observable<EventoResponse> {
-    return this.http.get<EventoResponse>(`${this.apiUrl}events/owner?page=${page}&size=${size}`);
+    return this.http.get<EventoResponse>(`${this.apiUrl}/events/owner?page=${page}&size=${size}`);
   }
 
   addEvento(evento: EventModel): Observable<EventModel> {
-    return this.http.post<EventModel>(`${this.apiUrl}events`, evento);
+    return this.http.post<EventModel>(`${this.apiUrl}/events`, evento);
   }
   // **************************
   //*** wfuturi: modelo GCN ***
@@ -63,7 +64,7 @@ export class EventService {
   }
 
   removeEvent(id: number): Observable<void> {
-    const url = `${this.apiUrl}events/${id}`;
+    const url = `${this.apiUrl}/events/${id}`;
     return this.http.delete<void>(url).pipe(
       catchError(()=>{
         this.uiService.showToast("Error al eliminar  el evento")
@@ -73,13 +74,13 @@ export class EventService {
   }
 
   updateEvent(event: EventRequestModel):Observable<EventRequestModel> {
-    return this.http.put<EventRequestModel>(`${this.apiUrl}events/${event.id}`, event);
+    return this.http.put<EventRequestModel>(`${this.apiUrl}/events/${event.id}`, event);
   }
 
-  // Método para buscar eventos
+  // Metodo para buscar eventos
   searchEvents(searchTerm: string): Observable<EventModel[]> {
     const params = new HttpParams().set('query', searchTerm);
-    return this.http.get<EventModel[]>(`${this.apiUrl}events/search`, { params });
+    return this.http.get<EventModel[]>(`${this.apiUrl}/events/search`, { params });
   }
 
 

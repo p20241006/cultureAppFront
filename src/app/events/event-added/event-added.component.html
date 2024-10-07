@@ -168,7 +168,13 @@
             <i class="pi pi-calendar" style="color: var(--primary-color)"></i>
             {{ eventOwner.start_date }} - {{ eventOwner.end_date }}
           </div>
-          <div class="mt-0 font-semibold text-xl">{{ 'S/' + eventOwner.price }}</div>
+          <div class="flex justify-between items-center">
+            <div>
+              <i class="pi pi-dollar" style="color: green"></i>
+              Costo entrada (referencial):
+            </div>
+            <div class="mt-0 font-semibold text-xl">{{ 'S/' + eventOwner.price }}</div>
+          </div>
           <div class="flex justify-between items-center mt-3">
             <button [routerLink]="['/events/details', eventOwner.id]" mat-flat-button class="bg-green-500">
               Ver evento

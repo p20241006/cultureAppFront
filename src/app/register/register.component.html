@@ -85,11 +85,11 @@
             <input
               type="email"
               formControlName="email"
+              (click)="onInputClick()"
               id="email"
               required
               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               placeholder="Correo electrónico"
-              (blur)="checkEmail()"
               class="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary-60 focus:border-secondary-50 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
             >
             <!-- Display validation error if email is invalid -->
@@ -97,8 +97,9 @@
                 Por favor, ingrese un email válido
             </span>
             <!-- Display backend error if the email is not available -->
-            <span *ngIf="emailErrorMessage" class="mt-2 text-sm text-red-500">
+            <span *ngIf="showError" class="mt-2 text-sm text-red-500">
             {{ emailErrorMessage }}
+
             </span>
           </div>
           <div class="sm:col-span-2">
@@ -129,7 +130,7 @@
 
         <!-- Botón Registrarse, deshabilitado hasta que se seleccionen al menos 3 categorías -->
         <button
-          (click)="enviarCategorias()"
+          (click)="enviarCategorias();checkEmail()"
           type="submit"
           [disabled]="categoriasSeleccionadas.length < 3"
           class="w-full inline-flex justify-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-secondary-70 rounded-full focus:ring-4 focus:ring-secondary-60 focus:border-secondary-50 dark:focus:ring-primary-900 hover:bg-primary-800 disabled:opacity-50 disabled:pointer-events-none">

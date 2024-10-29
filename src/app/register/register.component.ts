@@ -36,6 +36,7 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   categoriasSeleccionadas: number[] = [];
   emailErrorMessage: string = '';
+  showError: boolean = false;
 
 
   categorias = [
@@ -94,11 +95,17 @@ export class RegisterComponent implements OnInit {
     this.userService.checkEmail(email).subscribe((response) => {
       if (response === 'Email disponible') {
         this.emailErrorMessage = ''; // No error, email is available
-        this.uiService.showToast('El email está disponible'); // Optionally show a success toast
+        this.showError = false;
+        //this.uiService.showToast('El email está disponible'); // Optionally show a success toast
       } else {
+        this.showError = true;
         this.emailErrorMessage = 'El correo ya está registrado o ocurrió un error'; // Show error message
       }
     });
+  }
+
+  onInputClick() {
+    this.showError = false; // Oculta el mensaje de error al hacer clic en el campo de entrada
   }
 
   onSubmit(): void {
@@ -109,7 +116,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']); // Redirect to login
         },
         error: (error) => {
-          this.uiService.showToast('Error al registrar');
+          this.uiService.showToast('El correo ya está registrado o ocurrió un error');
         }
       });
     }

@@ -36,7 +36,6 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   categoriasSeleccionadas: number[] = [];
   emailErrorMessage: string = '';
-  showError: boolean = false;
 
 
   categorias = [
@@ -90,22 +89,23 @@ export class RegisterComponent implements OnInit {
 
   }
 
-  checkEmail(): void {
-    const email = this.registerForm.get('email')?.value;
-    this.userService.checkEmail(email).subscribe((response) => {
-      if (response === 'Email disponible') {
-        this.emailErrorMessage = ''; // No error, email is available
-        this.showError = false;
-        //this.uiService.showToast('El email está disponible'); // Optionally show a success toast
-      } else {
-        this.showError = true;
-        this.emailErrorMessage = 'El correo ya está registrado o ocurrió un error'; // Show error message
-      }
-    });
+  clearEmailError(): void {
+    this.emailErrorMessage = ''; // Limpiar el mensaje de error al escribir
   }
 
-  onInputClick() {
-    this.showError = false; // Oculta el mensaje de error al hacer clic en el campo de entrada
+  checkEmail(): void {
+    const emailControl = this.registerForm.get('email');
+    const email = emailControl?.value;
+
+    this.userService.checkEmail(email).subscribe((response) => {
+      if (response === 'Email disponible') {
+        this.emailErrorMessage = '';
+        this.uiService.showToast('El email está disponible');
+      } else {
+        this.emailErrorMessage = 'El correo ya está registrado o ocurrió un error';
+        emailControl?.markAsTouched();
+      }
+    });
   }
 
   onSubmit(): void {

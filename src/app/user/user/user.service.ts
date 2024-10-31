@@ -108,7 +108,7 @@ export class UserService implements IUserService{
       catchError((error: HttpErrorResponse) => {
         // Handle any errors, such as a 409 conflict for existing email
         if (error.status === 409) {
-          this.uiService.showToast('El correo ya está registrado');
+          this.uiService.showToast('El email ya está registrado');
         }
         return of(''); // Return an empty string if there's an error
       })

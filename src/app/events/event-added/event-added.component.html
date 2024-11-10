@@ -9,6 +9,7 @@
     </button>
   </div>
 
+  <p-toast></p-toast>
   <!-- Formulario de Agregar Evento -->
   <div *ngIf="mostrarFormulario" class="bg-gray-100 p-6 rounded-lg mb-6">
     <form [formGroup]="eventoForm" (ngSubmit)="agregarEvento()">
@@ -120,7 +121,7 @@
     </form>
   </div>
 </div>
-
+<p-toast></p-toast>
 
 @if (eventsOwner$ | async; as events) {
   <div class="event-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

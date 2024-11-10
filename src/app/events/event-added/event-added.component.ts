@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {EventService} from "../services/event.service";
-import {MessageService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {AsyncPipe, CurrencyPipe, NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {Button, ButtonDirective} from "primeng/button";
 import {ChipsModule} from "primeng/chips";
@@ -25,6 +25,8 @@ import {DialogModule} from "primeng/dialog";
 import {EventDialogComponent} from "../event-dialog/event-dialog.component";
 import {UiService} from "../../common/ui.service";
 import {FavoriteService} from "../services/favorite.service";
+import {ToastService} from "../../services/toast.service";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
 
 
 @Component({
@@ -52,6 +54,7 @@ import {FavoriteService} from "../services/favorite.service";
     DialogModule,
     EventDialogComponent
   ],
+  providers: [MessageService],
   templateUrl: './event-added.component.html',
   styleUrl: './event-added.component.scss'
 
@@ -93,7 +96,8 @@ export class EventAddedComponent implements OnInit {
   mostrarFormulario = false;
   eventoService = inject(EventService);
   fb = inject(FormBuilder);
-  messageService = inject(MessageService);
+  private toastService = inject(ToastService);
+
 
   constructor(
   ) {
@@ -121,21 +125,15 @@ export class EventAddedComponent implements OnInit {
     if (this.eventoForm.valid) {
       this.eventoService.addEvento(this.eventoForm.value).subscribe(
         (response) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Evento agregado correctamente',
-          });
+          this.toastService.sendSuccess('Dispositivo agregado', 'Evento agregado correctamente');
           this.eventoForm.reset();
-          this.mostrarFormulario = false; // Ocultar el formulario después de agregar el evento
-          this.uiService.showToast("El evento a sido agregado exitosamente");
+          this.mostrarFormulario = false;
+          this.loadEvents(this.currentPage, this.pageSize);
+          this.uiService.showToast("Evento agregado correctamente");
         },
         (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo agregar el evento',
-          });
+          this.uiService.showToast("No se pudo agregar el evento"+error.toString());
+          this.toastService.sendError('Error', 'No se pudo agregar el evento');
         }
       );
     }
@@ -223,11 +221,13 @@ export class EventAddedComponent implements OnInit {
     if (this.selectedEventId !== null) {
       this.eventoService.removeEvent(this.selectedEventId).subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Evento eliminado exitosamente' });
+          this.loadEvents(this.currentPage, this.pageSize);
+          this.toastService.sendWarn('Evento eliminado', 'Evento eliminado exitosamente');
+          this.uiService.showToast('Evento eliminado exitosamente')
           this.display = false; // Oculta el diálogo
         },
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error, por favor comuníquese con el administrador' });
+          this.toastService.sendError('Error', 'Ocurrió un error, por favor comuníquese con el administrador');
           this.display = false; // Oculta el diálogo
         }
       });

@@ -8,6 +8,7 @@ import {UiService} from "../../common/ui.service";
 import {EventRequestModel} from "../model/EventRequest.model";
 import {RecommendedEventsResponse} from "../model/event-gcn";
 import {environment} from "../../../environments/environment";
+import {ErrorHandlerService} from "../../services/error-handle.service";
 
 
 
@@ -19,6 +20,7 @@ export class EventService {
   private apiUrl = environment.baseUrl;
   private cacheKey = 'proximosEventos';
   uiService = inject(UiService)
+  errorHandler = inject(ErrorHandlerService);
 
   constructor(private http: HttpClient, private cacheService: CacheService) { }
 
@@ -51,7 +53,9 @@ export class EventService {
   }
 
   addEvento(evento: EventModel): Observable<EventModel> {
-    return this.http.post<EventModel>(`${this.apiUrl}/events`, evento);
+    return this.http.post<EventModel>(`${this.apiUrl}/events`, evento).pipe(
+      catchError((error) => this.errorHandler.handleError(error))
+    );
   }
   // **************************
   //*** wfuturi: modelo GCN ***
@@ -66,10 +70,7 @@ export class EventService {
   removeEvent(id: number): Observable<void> {
     const url = `${this.apiUrl}/events/${id}`;
     return this.http.delete<void>(url).pipe(
-      catchError(()=>{
-        this.uiService.showToast("Error al eliminar  el evento")
-        return Promise.resolve()
-      })
+      catchError((error) => this.errorHandler.handleError(error))
     )
   }
 

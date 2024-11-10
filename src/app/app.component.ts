@@ -8,7 +8,7 @@ import {AuthService} from "./auth/auth.service";
 import {initFlowbite} from "flowbite";
 
 //PrimeNg
-import {MenuItem, PrimeNGConfig} from "primeng/api";
+import {MenuItem, MessageService, PrimeNGConfig} from "primeng/api";
 import {NgxUiLoaderModule} from "ngx-ui-loader";
 import {FormsModule} from "@angular/forms";
 import {ChipsModule} from "primeng/chips";
@@ -24,6 +24,8 @@ import {catchError} from "rxjs/operators";
 import {BehaviorSubject, Observable, of} from "rxjs";
 import {EventSearchComponent} from "./events/event-search/event-search.component";
 import {SearchService} from "./events/services/search.service";
+import {ToastService} from "./services/toast.service";
+import {ToastModule} from "primeng/toast";
 
 
 @Component({
@@ -47,8 +49,10 @@ import {SearchService} from "./events/services/search.service";
     OrganizerEventComponent,
     AllEventComponent,
     NgIf,
-    EventSearchComponent
+    EventSearchComponent,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +63,8 @@ export class AppComponent implements OnInit{
   items: MenuItem[] | undefined;
   authService = inject(AuthService)
   searchService =inject(SearchService);
+  messageService = inject(MessageService);
+  toastService = inject(ToastService);
 
   searchTerm: string = '';
 
@@ -89,6 +95,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     this.primeNGConfig.ripple = false;
+    this.listenToastService();
     this.primeNGConfig.setTranslation({
       accept: 'Aceptar',
       reject: 'Cancelar',
@@ -141,6 +148,21 @@ export class AppComponent implements OnInit{
       }
     ];
     initFlowbite();
+  }
+
+  private listenToastService() {
+    this.toastService.sendSub.subscribe({
+      next: newMessage => {
+        if (newMessage && newMessage.summary !== this.toastService.INIT_STATE.summary) {
+          this.messageService.add({
+            summary: newMessage.summary,
+            detail: newMessage.detail,
+            severity: newMessage.severity || 'info', // Default to 'info' if no severity provided
+            life: 3000 // Tiempo de visualización del mensaje en ms
+          });
+        }
+      }
+    });
   }
 
 }

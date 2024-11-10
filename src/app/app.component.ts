@@ -26,6 +26,7 @@ import {EventSearchComponent} from "./events/event-search/event-search.component
 import {SearchService} from "./events/services/search.service";
 import {ToastService} from "./services/toast.service";
 import {ToastModule} from "primeng/toast";
+import {Ripple} from "primeng/ripple";
 
 
 @Component({
@@ -50,7 +51,8 @@ import {ToastModule} from "primeng/toast";
     AllEventComponent,
     NgIf,
     EventSearchComponent,
-    ToastModule
+    ToastModule,
+    Ripple
   ],
   providers: [MessageService],
   templateUrl: './app.component.html',
